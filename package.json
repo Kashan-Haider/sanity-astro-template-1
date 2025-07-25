@@ -17,11 +17,13 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "astro": "^5.12.3",
+    "dotenv": "^17.2.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-is": "^19.1.0",
     "sanity": "^4.1.1",
     "styled-components": "^6.1.19",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "vite": "^7.0.6"
   }
 }
