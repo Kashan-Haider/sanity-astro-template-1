@@ -1,16 +1,134 @@
 ---
+import Navbar from '../components/Navbar.astro';
+import HeroSection from '../sections/HeroSection.astro';
+import AboutSection from '../sections/AboutSection.astro';
+import ServicesSection from '../sections/ServicesSection.astro';
+import GalleryShowcase from '../ui/GalleryShowcase.astro';
+import TestimonialCarousel from '../ui/TestimonialCarousel.astro';
+import VideoGallery from '../ui/VideoGallery.astro';
+import ServiceAreaSection from '../sections/ServiceAreaSection.astro';
+import PreFooterSection from '../sections/PreFooterSection.astro';
+import FooterSection from '../sections/FooterSection.astro';
+import BlogSection from '../sections/BlogSection.astro';
+import '../styles/global.css';
+import { sanityClient } from 'sanity:client';
 
+const templateId = import.meta.env.TEMPLATE_ID;
+const documentId = import.meta.env.DOCUMENT_ID;
+
+const doc = await sanityClient.fetch(
+  `*[_type == "sanity-astro-template" && templateId == $templateId && documentId == $documentId][0]`,
+  { templateId, documentId }
+);
+const heroTitle = doc?.content?.heroTitle ?? 'n/a';
 ---
-
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AquaFlow Plumbing Services</title>
+    <meta name="description" content="Reliable plumbing services for homes and businesses. 24/7 certified experts for repairs, installations, and emergencies." />
+    <!-- Open Graph / SEO Placeholders -->
+    <meta property="og:title" content="AquaFlow Plumbing Services" />
+    <meta property="og:description" content="Reliable plumbing services for homes and businesses. 24/7 certified experts for repairs, installations, and emergencies." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yourdomain.com" />
+    <meta property="og:image" content="/favicon.svg" />
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body>
+    <Navbar />
+    <HeroSection heroTitle={heroTitle} />
+    <AboutSection />
+    <BlogSection />
+    <ServicesSection />
+    <GalleryShowcase items={[
+      {
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+        heading: 'Modern Bathroom Remodel',
+        description: 'A complete transformation with new fixtures, tiling, and water-saving technology.',
+        cta: { label: 'View Project', href: '#' }
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80',
+        heading: 'Eco-Friendly Installations',
+        description: 'Sustainable plumbing solutions for a greener home.',
+        cta: { label: 'Learn More', href: '#' }
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80',
+        heading: 'Emergency Leak Repair',
+        description: 'Rapid response and expert repair for urgent plumbing issues.',
+        cta: { label: 'See Details', href: '#' }
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1520880867055-1e30d1cb001c?auto=format&fit=crop&w=800&q=80',
+        heading: 'Pipe Replacement Project',
+        description: 'Upgrading old pipes for improved safety and efficiency.',
+        cta: { label: 'Our Process', href: '#' }
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80',
+        heading: 'Commercial Plumbing Success',
+        description: 'Reliable solutions for offices, restaurants, and businesses.',
+        cta: { label: 'See Portfolio', href: '#' }
+      },
+    ]} />
+    <TestimonialCarousel id="testimonials" testimonials={[
+      {
+        image: 'https://randomuser.me/api/portraits/men/32.jpg',
+        name: 'James Thompson',
+        role: 'Founder',
+        company: 'GrowthLab',
+        link: '#',
+        industry: 'Digital Marketing',
+        text: 'From day one, this plumbing service exceeded our expectations. The team was prompt, professional, and solved our issues quickly. Highly recommended!',
+        verified: true
+      },
+      {
+        name: 'Maria Anderson',
+        role: 'Homeowner',
+        company: '',
+        industry: 'Residential',
+        text: 'The technicians were friendly and explained everything thoroughly. I felt confident in their expertise and the results speak for themselves.',
+        verified: true
+      },
+      {
+        image: 'https://randomuser.me/api/portraits/women/44.jpg',
+        name: 'Felicia Garrett',
+        role: 'Office Manager',
+        company: 'Acme Corp',
+        link: '#',
+        industry: 'Commercial',
+        text: 'We had a major leak at our office and AquaFlow responded immediately. The repairs were done efficiently and with minimal disruption.',
+        verified: false
+      }
+    ]} />
+    <VideoGallery videos={[
+      {
+        title: 'How to Fix a Leaky Faucet',
+        description: 'Step-by-step guide to fixing common faucet leaks in your home.',
+        videoUrl: 'https://www.youtube.com/watch?v=1yQ8n5Qk8gI',
+        thumbnail: 'https://img.youtube.com/vi/1yQ8n5Qk8gI/hqdefault.jpg',
+        cta: { label: 'Watch Now', href: 'https://www.youtube.com/watch?v=1yQ8n5Qk8gI' }
+      },
+      {
+        title: 'Behind the Scenes: Pipe Replacement',
+        description: 'See our team in action as we replace old pipes with new, efficient systems.',
+        videoUrl: 'https://www.youtube.com/watch?v=2VwsvrPFr9w',
+        thumbnail: 'https://img.youtube.com/vi/2VwsvrPFr9w/hqdefault.jpg',
+        cta: { label: 'Learn More', href: 'https://www.youtube.com/watch?v=2VwsvrPFr9w' }
+      },
+      {
+        title: 'Customer Testimonial: Emergency Repair',
+        description: 'Hear from a satisfied customer about our rapid emergency repair service.',
+        videoUrl: 'https://www.youtube.com/watch?v=3A2kQ1bQp2E',
+        thumbnail: 'https://img.youtube.com/vi/3A2kQ1bQp2E/hqdefault.jpg',
+        cta: { label: 'See Story', href: 'https://www.youtube.com/watch?v=3A2kQ1bQp2E' }
+      }
+    ]} />
+    <ServiceAreaSection />
+    <PreFooterSection />
+    <FooterSection />
+  </body>
 </html>

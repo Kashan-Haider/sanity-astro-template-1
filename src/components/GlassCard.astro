@@ -1,0 +1,6 @@
+---
+const { ariaLabel = '', class: className = '' } = Astro.props;
+---
+<div class={['glass', className].join(' ')} aria-label={ariaLabel} tabindex="0" role="region">
+  <slot />
+</div> 
