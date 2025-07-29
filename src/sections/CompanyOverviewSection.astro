@@ -1,0 +1,117 @@
+---
+export interface Props {
+  companyName?: string;
+  sections?: Array<{
+    title: string;
+    description: string;
+    image: string;
+    imageAlt?: string;
+  }>;
+}
+
+const { 
+  companyName = "Your Company Name",
+  sections = [
+    {
+      title: "Our Mission",
+      description: "We are dedicated to providing exceptional service and innovative solutions to our clients. Our mission is to exceed expectations and build lasting relationships through quality work and reliable service.",
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Team working together"
+    },
+    {
+      title: "Years of Experience",
+      description: "With over 15 years in the industry, we've built a reputation for excellence and reliability. Our experienced team brings expertise and dedication to every project we undertake.",
+      image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Professional at work"
+    },
+    {
+      title: "Quality Assurance",
+      description: "We maintain the highest standards of quality in everything we do. From initial consultation to project completion, we ensure every detail meets our rigorous quality standards.",
+      image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Quality inspection"
+    },{
+      title: "Our Mission",
+      description: "We are dedicated to providing exceptional service and innovative solutions to our clients. Our mission is to exceed expectations and build lasting relationships through quality work and reliable service.",
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Team working together"
+    },
+    {
+      title: "Years of Experience",
+      description: "With over 15 years in the industry, we've built a reputation for excellence and reliability. Our experienced team brings expertise and dedication to every project we undertake.",
+      image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Professional at work"
+    },
+    {
+      title: "Quality Assurance",
+      description: "We maintain the highest standards of quality in everything we do. From initial consultation to project completion, we ensure every detail meets our rigorous quality standards.",
+      image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Quality inspection"
+    }
+  ]
+} = Astro.props;
+---
+
+<section id="company-overview" class="py-20 px-4 bg-gradient-to-br from-white/80 via-surface/10 to-white">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <span class="inline-block mb-4 px-5 py-2 rounded-full bg-accent/90 text-body-dark font-semibold shadow text-sm">About {companyName}</span>
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-heading-light">
+        Discover <span class="text-accent">{companyName}</span>
+      </h2>
+      <p class="text-lg text-body-light max-w-3xl mx-auto">
+        Learn more about our company, our values, and what makes us the right choice for your needs.
+      </p>
+    </div>
+
+    <!-- Alternating Sections -->
+    <div class="space-y-24">
+      {sections.map((section, index) => (
+        <div class={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12`}>
+          <!-- Content Side -->
+          <div class="flex-1 space-y-6">
+            <h3 class="text-3xl md:text-4xl font-bold text-heading-light">
+              {section.title}
+            </h3>
+            <p class="text-lg text-body-light leading-relaxed">
+              {section.description}
+            </p>
+            <div class="flex items-center gap-4 pt-4">
+              <div class="w-12 h-1 bg-accent rounded-full"></div>
+              <span class="text-accent font-semibold">Learn More</span>
+            </div>
+          </div>
+          
+          <!-- Image Side -->
+          <div class="flex-1">
+            <div class="relative group">
+              <div class="absolute inset-0 bg-gradient-to-br from-accent/20 to-brand/20 rounded-3xl transform rotate-3 group-hover:rotate-6 transition-transform duration-300"></div>
+              <img 
+                src={section.image} 
+                alt={section.imageAlt || section.title} 
+                class="relative w-full h-80 object-cover rounded-3xl shadow-2xl transform -rotate-3 group-hover:-rotate-6 transition-transform duration-300"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-20">
+      <div class="bg-gradient-to-r from-accent/10 to-brand/10 rounded-3xl p-8 backdrop-blur-lg">
+        <h3 class="text-2xl font-bold mb-4 text-heading-light">Ready to Work With Us?</h3>
+        <p class="text-body-light mb-6 max-w-2xl mx-auto">
+          Get in touch today to discuss your project and see how we can help bring your vision to life.
+        </p>
+        <a 
+          href="#contact" 
+          class="inline-block px-8 py-4 bg-accent hover:bg-brand text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+        >
+          Start Your Project
+        </a>
+      </div>
+    </div>
+  </div>
+</section> 

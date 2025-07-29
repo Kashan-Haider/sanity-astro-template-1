@@ -9,7 +9,7 @@ import VideoGallery from '../ui/VideoGallery.astro';
 import ServiceAreaSection from '../sections/ServiceAreaSection.astro';
 import PreFooterSection from '../sections/PreFooterSection.astro';
 import FooterSection from '../sections/FooterSection.astro';
-import BlogSection from '../sections/BlogSection.astro';
+import CompanyOverviewSection from '../sections/CompanyOverviewSection.astro';
 import '../styles/global.css';
 import { sanityClient } from 'sanity:client';
 
@@ -40,7 +40,7 @@ const heroTitle = doc?.content?.heroTitle ?? 'n/a';
     <Navbar />
     <HeroSection heroTitle={heroTitle} />
     <AboutSection />
-    <BlogSection />
+    <CompanyOverviewSection />
     <ServicesSection />
     <GalleryShowcase items={[
       {
@@ -128,7 +128,11 @@ const heroTitle = doc?.content?.heroTitle ?? 'n/a';
       }
     ]} />
     <ServiceAreaSection />
-    <PreFooterSection />
+    <PreFooterSection 
+      latitude={32.7157}
+      longitude={-117.1611}
+      locationName="San Diego, CA"
+    />
     <FooterSection />
   </body>
 </html>

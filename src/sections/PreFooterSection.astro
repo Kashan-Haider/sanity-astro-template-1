@@ -1,5 +1,17 @@
 ---
+export interface Props {
+  latitude?: number;
+  longitude?: number;
+  locationName?: string;
+}
+
+const { 
+  latitude = 32.7157,
+  longitude = -117.1611,
+  locationName = "San Diego, CA"
+} = Astro.props;
 ---
+
 <section class="w-full bg-gradient-to-br from-white via-surface/20 to-white/80 backdrop-blur-lg">
   <div class="w-full justify-between flex flex-col md:flex-row items-center gap-12">
     <div class="flex-1 px-5 md:px-20 lg:px-40 flex flex-col mb-8 md:mb-0">
@@ -17,12 +29,55 @@
       </ul>
     </div>
     <div class="flex-1 w-full flex items-stretch">
-      <div class="h-[70vh] w-[50vw] flex-1 overflow-hidden shadow-2xl shadow-black bg-white/70 backdrop-blur-lg flex items-stretch">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8138.401092920334!2d-117.18677171211296!3d32.90961450916197!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dc077b22137d53%3A0x53a49543aaee6587!2sGoogle%20San%20Diego!5e1!3m2!1sen!2sus!4v1752853543522!5m2!1sen!2sus"
-          width="100%" height="100%" style="border:0; min-height:100%; min-width:100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          title="Our Location"></iframe>
+      <div class="h-[70vh] w-[50vw] flex-1 overflow-hidden shadow-2xl shadow-black bg-white/70 backdrop-blur-lg flex items-stretch rounded-2xl">
+        <div 
+          id="map" 
+          class="w-full h-full rounded-2xl"
+          data-latitude={latitude}
+          data-longitude={longitude}
+          data-location-name={locationName}
+        ></div>
       </div>
     </div>
   </div>
-</section> 
+</section>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+  // Initialize the map when the DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    const mapElement = document.getElementById('map');
+    if (!mapElement) return;
+    
+    const mapLatitude = parseFloat(mapElement.dataset.latitude || '32.7157');
+    const mapLongitude = parseFloat(mapElement.dataset.longitude || '-117.1611');
+    const mapLocationName = mapElement.dataset.locationName || 'San Diego, CA';
+    
+    // Create the map
+    const map = L.map('map').setView([mapLatitude, mapLongitude], 13);
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // Add a marker for the location
+    const marker = L.marker([mapLatitude, mapLongitude]).addTo(map);
+    marker.bindPopup(`<b>${mapLocationName}</b><br>Our Location`).openPopup();
+    
+    // Add some styling to the map container
+    mapElement.style.borderRadius = '1rem';
+  });
+</script>
+
+<script>
+  // TypeScript declaration for Leaflet
+  declare global {
+    const L: any;
+  }
+</script> 
