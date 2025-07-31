@@ -16,11 +16,23 @@ export default defineConfig({
     dataset: process.env.PUBLIC_SANITY_DATASET,
     useCdn: false, // See note on using the CDN
     apiVersion: "2025-01-28", // insert the current date to access the latest version of the API
-  studioBasePath: '/studio'
-
+    studioBasePath: '/studio'
   }), react()],
   adapter: vercel(),
   vite: {
     plugins: [tailwindcss()]
+  },
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp'
+    },
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**'
+      }
+    ]
   }
 });

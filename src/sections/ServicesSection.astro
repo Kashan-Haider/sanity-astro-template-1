@@ -1,12 +1,11 @@
 ---
 import ServiceBox from '../ui/ServiceBox.astro';
-import StatsGlass from '../ui/StatsGlass.astro';
 ---
-<section id="services" class="p-5 sm:p-10 md:py-24 md:px-20 lg:px-40 bg-gradient-to-br from-white/80 via-surface/10 to-white">
+<section id="services" class="p-5 sm:p-10 md:py-24 md:px-20 lg:px-40 bg-gradient-to-br from-light/80 via-dark/10 to-light">
   <div class="mx-auto px-4">
     <div class="text-center mb-14">
-      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-heading-light">Our Plumbing Services</h2>
-      <p class="text-lg text-body-light max-w-2xl mx-auto">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-dark">Our Plumbing Services</h2>
+      <p class="text-lg text-dark max-w-2xl mx-auto">
         From emergency repairs to new installations, our certified plumbers deliver fast, reliable, and affordable solutions for homes and businesses. Explore our most popular services below.
       </p>
     </div>
@@ -55,10 +54,5 @@ import StatsGlass from '../ui/StatsGlass.astro';
       />
     </div>
   </div>
-  <StatsGlass stats={[
-    { icon: '🏆', value: '500+', label: 'Projects Completed' },
-    { icon: '🛡️', value: '99.9%', label: 'Uptime Guarantee' },
-    { icon: '🕑', value: '24/7', label: 'Expert Support' },
-    { icon: '💧', value: '150+', label: 'Happy Clients' },
-  ]} /> 
+
 </section>

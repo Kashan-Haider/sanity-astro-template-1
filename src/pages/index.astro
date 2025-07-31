@@ -5,13 +5,15 @@ import AboutSection from '../sections/AboutSection.astro';
 import ServicesSection from '../sections/ServicesSection.astro';
 import GalleryShowcase from '../ui/GalleryShowcase.astro';
 import TestimonialCarousel from '../ui/TestimonialCarousel.astro';
-import VideoGallery from '../ui/VideoGallery.astro';
 import ServiceAreaSection from '../sections/ServiceAreaSection.astro';
-import PreFooterSection from '../sections/PreFooterSection.astro';
+import BusinessDetailsSection from '../sections/BusinessDetailsSection.astro';
 import FooterSection from '../sections/FooterSection.astro';
 import CompanyOverviewSection from '../sections/CompanyOverviewSection.astro';
+import FAQSection from '../sections/FAQSection.astro';
 import '../styles/global.css';
 import { sanityClient } from 'sanity:client';
+import ServiceHighlights from '../sections/ServiceHighlights.astro';
+import PreFooterSection from '../sections/PreFooterSection.astro';
 
 const templateId = import.meta.env.TEMPLATE_ID;
 const documentId = import.meta.env.DOCUMENT_ID;
@@ -21,6 +23,65 @@ const doc = await sanityClient.fetch(
   { templateId, documentId }
 );
 const heroTitle = doc?.content?.heroTitle ?? 'n/a';
+
+const testimonials = [
+      {
+        image: 'https://randomuser.me/api/portraits/men/32.jpg',
+        name: 'James Thompson',
+        role: 'Founder',
+        company: 'GrowthLab',
+        link: '#',
+        industry: 'Digital Marketing',
+        text: 'From day one, this plumbing service exceeded our expectations. The team was prompt, professional, and solved our issues quickly. Highly recommended!',
+        verified: true
+      },
+      {
+        name: 'Maria Anderson',
+        role: 'Homeowner',
+        company: '',
+        industry: 'Residential',
+        text: 'The technicians were friendly and explained everything thoroughly. I felt confident in their expertise and the results speak for themselves.',
+        verified: true
+      },
+      {
+        image: 'https://randomuser.me/api/portraits/women/44.jpg',
+        name: 'Felicia Garrett',
+        role: 'Office Manager',
+        company: 'Acme Corp',
+        link: '#',
+        industry: 'Commercial',
+        text: 'We had a major leak at our office and AquaFlow responded immediately. The repairs were done efficiently and with minimal disruption.',
+        verified: false
+      },
+      {
+        image: 'https://randomuser.me/api/portraits/men/32.jpg',
+        name: 'James Thompson',
+        role: 'Founder',
+        company: 'GrowthLab',
+        link: '#',
+        industry: 'Digital Marketing',
+        text: 'From day one, this plumbing service exceeded our expectations. The team was prompt, professional, and solved our issues quickly. Highly recommended!',
+        verified: true
+      },
+      {
+        name: 'Maria Anderson',
+        role: 'Homeowner',
+        company: '',
+        industry: 'Residential',
+        text: 'The technicians were friendly and explained everything thoroughly. I felt confident in their expertise and the results speak for themselves.',
+        verified: true
+      },
+      {
+        image: 'https://randomuser.me/api/portraits/women/44.jpg',
+        name: 'Felicia Garrett',
+        role: 'Office Manager',
+        company: 'Acme Corp',
+        link: '#',
+        industry: 'Commercial',
+        text: 'We had a major leak at our office and AquaFlow responded immediately. The repairs were done efficiently and with minimal disruption.',
+        verified: false
+      }
+    ]
 ---
 <html lang="en">
   <head>
@@ -39,9 +100,9 @@ const heroTitle = doc?.content?.heroTitle ?? 'n/a';
   <body>
     <Navbar />
     <HeroSection heroTitle={heroTitle} />
+    <ServiceHighlights />
     <AboutSection />
     <CompanyOverviewSection />
-    <ServicesSection />
     <GalleryShowcase items={[
       {
         image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
@@ -74,65 +135,17 @@ const heroTitle = doc?.content?.heroTitle ?? 'n/a';
         cta: { label: 'See Portfolio', href: '#' }
       },
     ]} />
-    <TestimonialCarousel id="testimonials" testimonials={[
-      {
-        image: 'https://randomuser.me/api/portraits/men/32.jpg',
-        name: 'James Thompson',
-        role: 'Founder',
-        company: 'GrowthLab',
-        link: '#',
-        industry: 'Digital Marketing',
-        text: 'From day one, this plumbing service exceeded our expectations. The team was prompt, professional, and solved our issues quickly. Highly recommended!',
-        verified: true
-      },
-      {
-        name: 'Maria Anderson',
-        role: 'Homeowner',
-        company: '',
-        industry: 'Residential',
-        text: 'The technicians were friendly and explained everything thoroughly. I felt confident in their expertise and the results speak for themselves.',
-        verified: true
-      },
-      {
-        image: 'https://randomuser.me/api/portraits/women/44.jpg',
-        name: 'Felicia Garrett',
-        role: 'Office Manager',
-        company: 'Acme Corp',
-        link: '#',
-        industry: 'Commercial',
-        text: 'We had a major leak at our office and AquaFlow responded immediately. The repairs were done efficiently and with minimal disruption.',
-        verified: false
-      }
-    ]} />
-    <VideoGallery videos={[
-      {
-        title: 'How to Fix a Leaky Faucet',
-        description: 'Step-by-step guide to fixing common faucet leaks in your home.',
-        videoUrl: 'https://www.youtube.com/watch?v=1yQ8n5Qk8gI',
-        thumbnail: 'https://img.youtube.com/vi/1yQ8n5Qk8gI/hqdefault.jpg',
-        cta: { label: 'Watch Now', href: 'https://www.youtube.com/watch?v=1yQ8n5Qk8gI' }
-      },
-      {
-        title: 'Behind the Scenes: Pipe Replacement',
-        description: 'See our team in action as we replace old pipes with new, efficient systems.',
-        videoUrl: 'https://www.youtube.com/watch?v=2VwsvrPFr9w',
-        thumbnail: 'https://img.youtube.com/vi/2VwsvrPFr9w/hqdefault.jpg',
-        cta: { label: 'Learn More', href: 'https://www.youtube.com/watch?v=2VwsvrPFr9w' }
-      },
-      {
-        title: 'Customer Testimonial: Emergency Repair',
-        description: 'Hear from a satisfied customer about our rapid emergency repair service.',
-        videoUrl: 'https://www.youtube.com/watch?v=3A2kQ1bQp2E',
-        thumbnail: 'https://img.youtube.com/vi/3A2kQ1bQp2E/hqdefault.jpg',
-        cta: { label: 'See Story', href: 'https://www.youtube.com/watch?v=3A2kQ1bQp2E' }
-      }
-    ]} />
+    <ServicesSection />
+
     <ServiceAreaSection />
-    <PreFooterSection 
-      latitude={32.7157}
-      longitude={-117.1611}
-      locationName="San Diego, CA"
-    />
+    <BusinessDetailsSection 
+    latitude={32.7157}
+    longitude={-117.1611}
+    locationName="San Diego, CA"
+  />
+  <TestimonialCarousel id="testimonials" testimonials={testimonials} />
+    <FAQSection />
+    <PreFooterSection/>
     <FooterSection />
   </body>
 </html>

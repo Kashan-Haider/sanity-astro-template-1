@@ -1,0 +1,99 @@
+---
+const faqs = [
+  {
+    question: "What types of plumbing services do you offer?",
+    answer: "We provide comprehensive plumbing services including emergency repairs, pipe installations, water heater services, drain cleaning, leak detection, bathroom and kitchen remodeling, and preventive maintenance. Our certified plumbers handle both residential and commercial projects."
+  },
+  {
+    question: "Do you offer 24/7 emergency plumbing services?",
+    answer: "Yes! We understand that plumbing emergencies don't wait for business hours. Our emergency response team is available 24/7, 365 days a year to handle urgent issues like burst pipes, major leaks, and sewer backups."
+  },
+  {
+    question: "How quickly can you respond to emergency calls?",
+    answer: "We typically respond to emergency calls within 30-60 minutes in our service areas. Our rapid response team is strategically located throughout the region to ensure we can reach you as quickly as possible when you need us most."
+  },
+  {
+    question: "Are your plumbers licensed and insured?",
+    answer: "Absolutely! All our plumbers are fully licensed, bonded, and insured. We maintain comprehensive liability insurance and workers' compensation coverage. You can have peace of mind knowing you're working with qualified professionals."
+  },
+  {
+    question: "Do you provide free estimates?",
+    answer: "Yes, we provide free, no-obligation estimates for all non-emergency services. For emergency calls, we charge a service call fee which is applied toward the cost of repairs if you choose to proceed with our services."
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer: "We accept cash, checks, and all major credit cards including Visa, MasterCard, American Express, and Discover. We also offer financing options for larger projects to help make your plumbing improvements more affordable."
+  },
+  {
+    question: "Do you offer warranties on your work?",
+    answer: "Yes! We stand behind our work with comprehensive warranties. Labor is typically warranted for 1-2 years depending on the service, and we honor all manufacturer warranties on parts and fixtures we install."
+  },
+  {
+    question: "How can I prevent common plumbing problems?",
+    answer: "Regular maintenance is key! Avoid putting grease down drains, don't flush non-biodegradable items, have your water heater serviced annually, and consider our preventive maintenance plans. We also offer tips and guidance during our service visits."
+  }
+];
+---
+
+<section id="faq" class="py-20 px-4 bg-gradient-to-br from-light/80 via-dark/10 to-light">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-14">
+      <span class="inline-block mb-4 px-5 py-2 rounded-full bg-secondary/90 text-light font-semibold shadow text-sm">FAQ</span>
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-4 text-dark">Frequently Asked Questions</h2>
+      <p class="text-lg text-dark max-w-2xl mx-auto">
+        Get answers to the most common questions about our plumbing services, pricing, and processes.
+      </p>
+    </div>
+    
+    <div class="space-y-4" x-data="{ openFaq: null }">
+      {faqs.map((faq, index) => (
+        <div class="group border border-dark/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-light/60 backdrop-blur-sm hover:bg-light/80">
+          <button 
+            type="button"
+            class="w-full px-6 py-5 text-left flex items-center justify-between focus:outline-none transition-all duration-300"
+            x-on:click={`openFaq = openFaq === ${index} ? null : ${index}`}
+            :class={`openFaq === ${index} ? 'bg-secondary/5' : 'hover:bg-secondary/5'`}
+          >
+            <h3 class="text-lg md:text-xl font-bold text-dark pr-4 group-hover:text-secondary transition-colors duration-300">
+              {faq.question}
+            </h3>
+            <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-secondary/10 group-hover:bg-secondary/20 transition-all duration-300">
+              <svg 
+                class="w-5 h-5 text-secondary transition-transform duration-300"
+                :class={`openFaq === ${index} ? 'rotate-45' : 'rotate-0'`}
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </div>
+          </button>
+          <div 
+            class="overflow-hidden transition-all duration-500 ease-in-out"
+            x-show={`openFaq === ${index}`}
+            x-transition:enter="transition-all duration-500 ease-out"
+            x-transition:enter-start="opacity-0 max-h-0"
+            x-transition:enter-end="opacity-100 max-h-96"
+            x-transition:leave="transition-all duration-500 ease-in"
+            x-transition:leave-start="opacity-100 max-h-96"
+            x-transition:leave-end="opacity-0 max-h-0"
+            x-cloak
+          >
+            <div class="px-6 pb-5 pt-2">
+              <p class="text-dark leading-relaxed text-base">
+                {faq.answer}
+              </p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<style>
+  [x-cloak] { display: none !important; }
+</style>

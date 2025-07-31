@@ -1,24 +1,27 @@
 ---
+import ImageOptimization from '../utils/ImageOptimization.astro';
+import plumberImage from '../../public/plumber.jpg';
+
 export interface Props {
   heroTitle: string;
 }
 const { heroTitle } = Astro.props;
 ---
-<section class="relative flex flex-col items-center justify-center min-h-[100vh] bg-surface overflow-hidden">
-  <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1500&q=80" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none select-none" loading="lazy" />
-  <div class="absolute inset-0 bg-gradient-to-br from-brand/90 via-accent/10 to-accent/90"></div>
+<section class="relative flex flex-col items-center justify-center min-h-[100vh] bg-dark overflow-hidden">
+  <ImageOptimization src={plumberImage} alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none select-none" loading="lazy" />
+  <div class="absolute inset-0 bg-gradient-to-br from-primary/90 via-secondary/10 to-secondary/90"></div>
   <div class="relative z-10 w-full flex flex-col items-center justify-center px-4 pt-32 pb-12">
     <div class="max-w-7xl w-full mx-auto text-center mb-10">
       <span class="inline-block mb-4 px-5 py-2 rounded-full bg-white/10 border border-white/20 text-base font-semibold text-white tracking-wide shadow-lg backdrop-blur">24/7 Emergency Plumbing</span>
-      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 text-heading-dark">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 text-light">
         {heroTitle}
       </h1>
-      <p class="text-lg md:text-xl text-body-dark mb-8 font-medium">
+      <p class="text-lg md:text-xl text-light mb-8 font-medium">
         Fast, reliable, and affordable plumbing solutions for homes and businesses. From emergency repairs to new installations, our certified plumbers are ready to help—anytime, anywhere.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-        <a href="#get-quote" class="inline-block rounded-full px-8 py-3 text-base font-bold shadow transition bg-accent hover:bg-brand text-heading-dark focus:outline-none focus:ring-2 focus:ring-white">Start Free Quote</a>
-        <a href="#contact" class="inline-block rounded-full px-8 py-3 text-base font-semibold border border-white/40 text-heading-dark hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">Contact Us</a>
+        <a href="#" class="inline-block rounded-full px-8 py-3 text-base font-bold shadow transition bg-secondary hover:bg-primary text-light focus:outline-none focus:ring-2 focus:ring-white">Start Free Quote</a>
+        <a href="#" class="inline-block rounded-full px-8 py-3 text-base font-semibold border border-white/40 text-light hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">Contact Us</a>
       </div>
     </div>
   </div>

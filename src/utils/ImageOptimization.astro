@@ -1,0 +1,119 @@
+---
+import { Image } from 'astro:assets';
+
+export interface Props {
+  src: string | ImageMetadata;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  decoding?: 'async' | 'sync' | 'auto';
+  sizes?: string;
+  quality?: number;
+}
+
+const { 
+  src, 
+  alt, 
+  width = 400, 
+  height = 300, 
+  class: className = '',
+  loading = 'lazy',
+  decoding = 'async',
+  sizes = '100vw',
+  quality = 80
+} = Astro.props;
+
+// Check if it's a Sanity image URL
+const isSanityImage = typeof src === 'string' && src.includes('cdn.sanity.io');
+
+// Check if it's a remote URL (non-Sanity)
+const isRemoteImage = typeof src === 'string' && (src.startsWith('http://') || src.startsWith('https://')) && !isSanityImage;
+
+// Check if it's an imported image (ImageMetadata)
+const isImportedImage = typeof src === 'object' && src !== null && 'src' in src;
+
+// Generate Sanity image URL with transformations
+function getSanityImageUrl(url: string, width: number, height: number, quality: number) {
+  const baseUrl = url.split('?')[0];
+  return `${baseUrl}?w=${width}&h=${height}&fit=crop&auto=format&q=${quality}&fm=webp`;
+}
+
+// Generate responsive Sanity URLs
+function getSanitySrcSet(url: string, width: number, height: number, quality: number) {
+  const sizes = [320, 640, 768, 1024, 1280, 1920];
+  const aspectRatio = width / height;
+  
+  return sizes
+    .filter(size => size <= width * 2) // Don't upscale beyond 2x
+    .map(size => {
+      const scaledHeight = Math.round(size / aspectRatio);
+      return `${getSanityImageUrl(url, size, scaledHeight, quality)} ${size}w`;
+    })
+    .join(', ');
+}
+---
+
+{isSanityImage ? (
+  <picture>
+    <source 
+      srcset={getSanitySrcSet(src as string, width, height, quality)}
+      sizes={sizes}
+      type="image/webp"
+    />
+    <img 
+      src={getSanityImageUrl(src as string, width, height, quality)}
+      alt={alt}
+      width={width}
+      height={height}
+      class={className}
+      loading={loading}
+      decoding={decoding}
+      style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
+    />
+  </picture>
+) : isRemoteImage ? (
+  <picture>
+    <source 
+      srcset={`${src}?auto=format&fit=crop&w=${width}&q=${quality}&fm=webp`} 
+      type="image/webp"
+    />
+    <img 
+      src={src as string} 
+      alt={alt}
+      width={width}
+      height={height}
+      class={className}
+      loading={loading}
+      decoding={decoding}
+      sizes={sizes}
+      style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
+    />
+  </picture>
+) : isImportedImage ? (
+  <Image 
+    src={src as ImageMetadata}
+    alt={alt}
+    width={width}
+    height={height}
+    class={className}
+    loading={loading}
+    decoding={decoding}
+    format="webp"
+    quality={quality}
+    sizes={sizes}
+  />
+) : (
+  <img 
+    src={src as string}
+    alt={alt}
+    width={width}
+    height={height}
+    class={className}
+    loading={loading}
+    decoding={decoding}
+    sizes={sizes}
+    style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
+  />
+)}

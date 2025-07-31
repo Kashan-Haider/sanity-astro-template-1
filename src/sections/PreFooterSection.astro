@@ -1,83 +1,27 @@
----
-export interface Props {
-  latitude?: number;
-  longitude?: number;
-  locationName?: string;
-}
 
-const { 
-  latitude = 32.7157,
-  longitude = -117.1611,
-  locationName = "San Diego, CA"
-} = Astro.props;
 ---
 
-<section class="w-full bg-gradient-to-br from-white via-surface/20 to-white/80 backdrop-blur-lg">
-  <div class="w-full justify-between flex flex-col md:flex-row items-center gap-12">
-    <div class="flex-1 px-5 md:px-20 lg:px-40 flex flex-col mb-8 md:mb-0">
-      <h2 class="text-4xl md:text-5xl font-extrabold mb-3 text-heading-light">
-        Let's Solve Your Plumbing Problems—<span class="text-accent">Today</span>
-      </h2>
-      <p class="text-lg text-body-light mb-5 max-w-lg">
-        Our expert team is ready to help with fast, friendly, and reliable service. Whether you need emergency repairs, a new installation, or just some advice, we're here for you.
-      </p>
-      <ul class="mb-6 space-y-2 text-body-light text-base max-w-md text-left">
-        <li class="flex items-center gap-2"><span class="text-accent">✔️</span> 24/7 Emergency Response</li>
-        <li class="flex items-center gap-2"><span class="text-accent">✔️</span> Upfront, Transparent Pricing</li>
-        <li class="flex items-center gap-2"><span class="text-accent">✔️</span> Licensed & Insured Professionals</li>
-        <li class="flex items-center gap-2"><span class="text-accent">✔️</span> 100% Satisfaction Guarantee</li>
-      </ul>
-    </div>
-    <div class="flex-1 w-full flex items-stretch">
-      <div class="h-[70vh] w-[50vw] flex-1 overflow-hidden shadow-2xl shadow-black bg-white/70 backdrop-blur-lg flex items-stretch rounded-2xl">
-        <div 
-          id="map" 
-          class="w-full h-full rounded-2xl"
-          data-latitude={latitude}
-          data-longitude={longitude}
-          data-location-name={locationName}
-        ></div>
+import ImageOptimization from '../utils/ImageOptimization.astro';
+---
+
+<div class="text-white bg-gradient-to-br from-secondary via-secondary/60 to-secondary py-5 px-5 md:px-20 lg:px-20 xl:px-40">
+    <div class="flex w-full flex-col md:flex-row items-center justify-between mb-8 md:mb-0 gap-5">
+            <div class="flex items-center gap-2 mb-4">
+        <ImageOptimization 
+          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=100&q=80" 
+          alt="AquaFlow Logo" 
+          width={40} 
+          height={40} 
+          class="w-10 h-10" 
+        />
+        <span class="text-2xl font-bold ">AquaFlow</span>
+      </div>
+      <p class=" mb-4 md:text-left w-[300px] text-center">Reliable plumbing solutions for homes and businesses. Serving your area with certified experts and 24/7 support.</p>
+      <div class="flex gap-3">
+        <a href="#" aria-label="X" class="w-9 h-9 flex items-center justify-center rounded-md bg-light/10 hover:bg-secondary transition"><svg class="w-5 h-5 " fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20" /></svg></a>
+        <a href="#" aria-label="LinkedIn" class="w-9 h-9 flex items-center justify-center rounded-md bg-light/10 hover:bg-secondary transition"><svg class="w-5 h-5 " fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.29c-.97 0-1.75-.79-1.75-1.75s.78-1.75 1.75-1.75 1.75.79 1.75 1.75-.78 1.75-1.75 1.75zm13.5 10.29h-3v-4.5c0-1.08-.02-2.47-1.5-2.47-1.5 0-1.73 1.17-1.73 2.39v4.58h-3v-9h2.89v1.23h.04c.4-.75 1.38-1.54 2.84-1.54 3.04 0 3.6 2 3.6 4.59v4.72z"/></svg></a>
+        <a href="#" aria-label="Facebook" class="w-9 h-9 flex items-center justify-center rounded-md bg-light/10 hover:bg-secondary transition"><svg class="w-5 h-5 " fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35c-.733 0-1.325.592-1.325 1.325v21.351c0 .732.592 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.672c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.592 1.323-1.324v-21.35c0-.733-.593-1.325-1.324-1.325z"/></svg></a>
+        <a href="#" aria-label="YouTube" class="w-9 h-9 flex items-center justify-center rounded-md bg-light/10 hover:bg-secondary transition"><svg class="w-5 h-5 " fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-1.403-.184-7.027-.184-7.027-.184s-5.624 0-7.027.184c-1.42.186-2.537 1.304-2.723 2.723-.184 1.403-.184 4.326-.184 4.326s0 2.923.184 4.326c.186 1.42 1.304 2.537 2.723 2.723 1.403.184 7.027.184 7.027.184s5.624 0 7.027-.184c1.42-.186 2.537-1.304 2.723-2.723.184-1.403.184-4.326.184-4.326s0-2.923-.184-4.326c-.186-1.42-1.304-2.537-2.723-2.723zm-10.615 8.816v-4l6 2-6 2z"/></svg></a>
       </div>
     </div>
   </div>
-</section>
-
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-<script>
-  // Initialize the map when the DOM is loaded
-  document.addEventListener('DOMContentLoaded', function() {
-    const mapElement = document.getElementById('map');
-    if (!mapElement) return;
-    
-    const mapLatitude = parseFloat(mapElement.dataset.latitude || '32.7157');
-    const mapLongitude = parseFloat(mapElement.dataset.longitude || '-117.1611');
-    const mapLocationName = mapElement.dataset.locationName || 'San Diego, CA';
-    
-    // Create the map
-    const map = L.map('map').setView([mapLatitude, mapLongitude], 13);
-    
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-    
-    // Add a marker for the location
-    const marker = L.marker([mapLatitude, mapLongitude]).addTo(map);
-    marker.bindPopup(`<b>${mapLocationName}</b><br>Our Location`).openPopup();
-    
-    // Add some styling to the map container
-    mapElement.style.borderRadius = '1rem';
-  });
-</script>
-
-<script>
-  // TypeScript declaration for Leaflet
-  declare global {
-    const L: any;
-  }
-</script> 

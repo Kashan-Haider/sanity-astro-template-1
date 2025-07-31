@@ -1,0 +1,604 @@
+// Sample data to populate the sanity-astro-template document
+const sampleDocument = {
+    _type: 'sanity-astro-template',
+    
+    // Template Identification
+    templateId: 'plumbing-template',
+    documentId: 'aquaflow-plumbing-001',
+    businessName: 'AquaFlow Plumbing',
+    businessEmail: 'contact@aquaflowplumbing.com',
+  
+    // Theme Colors
+    themeColors: {
+      brand: '#1e3a8a',      // Dark blue
+      accent: '#BF465A',      // Bright rose
+      surface: '#010819'      // Dark slate
+    },
+  
+    // Hero Section
+    heroSection: {
+      heroTitle: 'Transform Your Plumbing Experience with Expert Plumbers',
+      heroSubtitle: 'Fast, reliable, and affordable plumbing solutions for homes and businesses. From emergency repairs to new installations, our certified plumbers are ready to help—anytime, anywhere.',
+      heroBadge: '24/7 Emergency Plumbing',
+      heroImage: {
+        _type: 'image',
+        asset: {
+          _type: 'reference',
+          _ref: 'image-1517245386807-bb43f82c33c4' // Reference to your current hero image
+        }
+      },
+      ctaButtons: [
+        {
+          text: 'Start Free Quote',
+          href: '#get-quote',
+          primary: true
+        },
+        {
+          text: 'Contact Us',
+          href: '#contact',
+          primary: false
+        }
+      ]
+    },
+  
+    // About Section
+    aboutSection: {
+      title: 'Trusted Plumbing Experts for Your Home & Business',
+      description: 'With decades of experience, AquaFlow delivers reliable, innovative, and affordable plumbing solutions. Our certified professionals are dedicated to quality, safety, and customer satisfaction—24/7.',
+      image: {
+        _type: 'image',
+        asset: {
+          _type: 'reference',
+          _ref: 'image-1517245386807-bb43f82c33c4'
+        }
+      },
+      features: [
+        'Licensed & Insured Professionals',
+        'Upfront, Transparent Pricing',
+        '24/7 Emergency Service',
+        '100% Satisfaction Guarantee'
+      ],
+      ctaButton: {
+        text: 'Contact Our Team',
+        href: '#contact'
+      }
+    },
+  
+    // Company Overview Sections
+    companyOverview: {
+      sections: [
+        {
+          title: 'Our Mission',
+          description: 'We are dedicated to providing exceptional service and innovative solutions to our clients. Our mission is to exceed expectations and build lasting relationships through quality work and reliable service.',
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1506744038136-46273834b3fb'
+            }
+          },
+          imageAlt: 'Team working together'
+        },
+        {
+          title: 'Years of Experience',
+          description: 'With over 15 years in the industry, we\'ve built a reputation for excellence and reliability. Our experienced team brings expertise and dedication to every project we undertake.',
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1464983953574-0892a716854b'
+            }
+          },
+          imageAlt: 'Professional at work'
+        },
+        {
+          title: 'Quality Assurance',
+          description: 'We maintain the highest standards of quality in everything we do. From initial consultation to project completion, we ensure every detail meets our rigorous quality standards.',
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1519125323398-675f0ddb6308'
+            }
+          },
+          imageAlt: 'Quality inspection'
+        }
+      ]
+    },
+  
+    // Services Section
+    servicesSection: {
+      title: 'Our Plumbing Services',
+      subtitle: 'From emergency repairs to new installations, our certified plumbers deliver fast, reliable, and affordable solutions for homes and businesses. Explore our most popular services below.',
+      services: [
+        {
+          title: 'Emergency Repairs',
+          description: '24/7 rapid response for urgent plumbing issues',
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1506744038136-46273834b3fb'
+            }
+          },
+          bullets: [
+            '24/7 rapid response',
+            'Leak & burst pipe fixes',
+            'Clog removal',
+            'No hidden fees'
+          ],
+          cta: {
+            text: 'Learn More',
+            href: '#emergency-repairs'
+          }
+        },
+        {
+          title: 'Installations',
+          description: 'Professional installation of new plumbing systems',
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1464983953574-0892a716854b'
+            }
+          },
+          bullets: [
+            'Pipes & fixtures',
+            'Water heaters',
+            'Bathroom & kitchen upgrades',
+            'Eco-friendly options'
+          ],
+          cta: {
+            text: 'Learn More',
+            href: '#installations'
+          }
+        },
+        {
+          title: 'Maintenance Plans',
+          description: 'Preventive maintenance to keep your plumbing in top condition',
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1519125323398-675f0ddb6308'
+            }
+          },
+          bullets: [
+            'Scheduled checkups',
+            'Preventative care',
+            'Priority support',
+            'Discounted repairs'
+          ],
+          cta: {
+            text: 'Learn More',
+            href: '#maintenance'
+          }
+        },
+        {
+          title: 'Leak Detection',
+          description: 'Advanced technology to find hidden leaks',
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1520880867055-1e30d1cb001c'
+            }
+          },
+          bullets: [
+            'Advanced technology',
+            'Non-invasive methods',
+            'Early problem detection',
+            'Detailed reports'
+          ],
+          cta: {
+            text: 'Learn More',
+            href: '#leak-detection'
+          }
+        },
+        {
+          title: 'Pipe Replacement',
+          description: 'Upgrade old pipes with modern, reliable materials',
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1515378791036-0648a3ef77b2'
+            }
+          },
+          bullets: [
+            'Old pipe upgrades',
+            'Minimal disruption',
+            'Quality materials',
+            'Long-term reliability'
+          ],
+          cta: {
+            text: 'Learn More',
+            href: '#pipe-replacement'
+          }
+        },
+        {
+          title: 'Residential & Commercial',
+          description: 'Comprehensive plumbing services for all property types',
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1521737852567-6949f3f9f2b5'
+            }
+          },
+          bullets: [
+            'Homes & apartments',
+            'Offices & businesses',
+            'Custom solutions',
+            'Licensed & insured'
+          ],
+          cta: {
+            text: 'Learn More',
+            href: '#residential-commercial'
+          }
+        }
+      ],
+      stats: [
+        {
+          icon: '��',
+          value: '500+',
+          label: 'Projects Completed'
+        },
+        {
+          icon: '🛡️',
+          value: '99.9%',
+          label: 'Uptime Guarantee'
+        },
+        {
+          icon: '��',
+          value: '24/7',
+          label: 'Expert Support'
+        },
+        {
+          icon: '��',
+          value: '150+',
+          label: 'Happy Clients'
+        }
+      ]
+    },
+  
+    // Gallery Section
+    gallerySection: {
+      title: 'Gallery Highlights',
+      subtitle: 'Explore our recent projects and see the difference our team makes. Each gallery item features a unique solution and a story of success.',
+      items: [
+        {
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1506744038136-46273834b3fb'
+            }
+          },
+          heading: 'Modern Kitchen Renovation',
+          description: 'Complete kitchen plumbing upgrade with modern fixtures and efficient water systems.',
+          cta: {
+            label: 'View Project',
+            href: '/projects/kitchen-renovation'
+          }
+        },
+        {
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1464983953574-0892a716854b'
+            }
+          },
+          heading: 'Emergency Pipe Repair',
+          description: 'Rapid response to burst pipe emergency, preventing extensive water damage.',
+          cta: {
+            label: 'View Project',
+            href: '/projects/emergency-repair'
+          }
+        },
+        {
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1519125323398-675f0ddb6308'
+            }
+          },
+          heading: 'Commercial Installation',
+          description: 'Large-scale plumbing installation for new office building.',
+          cta: {
+            label: 'View Project',
+            href: '/projects/commercial-installation'
+          }
+        }
+      ]
+    },
+  
+    // Testimonials Section
+    testimonialsSection: {
+      title: 'What Our Clients Are Saying',
+      subtitle: 'Join thousands of satisfied customers who have transformed their businesses with our plumbing solutions.',
+      testimonials: [
+        {
+          name: 'Sarah Johnson',
+          role: 'Homeowner',
+          company: 'Johnson Family',
+          industry: 'Residential',
+          text: 'AquaFlow saved us from a major disaster when our pipes burst at 2 AM. Their emergency response was incredible, and the quality of work was outstanding.',
+          verified: true,
+          link: 'https://google.com/reviews/sarah-johnson'
+        },
+        {
+          name: 'Mike Rodriguez',
+          role: 'Property Manager',
+          company: 'ABC Properties',
+          industry: 'Commercial Real Estate',
+          text: 'We\'ve been working with AquaFlow for over 5 years. Their maintenance plans have prevented countless issues and saved us thousands in repairs.',
+          verified: true,
+          link: 'https://linkedin.com/in/mike-rodriguez'
+        },
+        {
+          name: 'Lisa Chen',
+          role: 'Restaurant Owner',
+          company: 'Golden Dragon Restaurant',
+          industry: 'Food Service',
+          text: 'The team at AquaFlow completely upgraded our kitchen plumbing system. Professional, clean, and completed ahead of schedule. Highly recommend!',
+          verified: false
+        }
+      ]
+    },
+  
+    // Video Gallery Section
+    videoGallerySection: {
+      title: 'Watch Our Plumbing in Action',
+      subtitle: 'See how our team solves real plumbing challenges and delivers quality results. Explore our video gallery for tips, project highlights, and customer stories.',
+      videos: [
+        {
+          title: 'Emergency Pipe Repair Process',
+          description: 'Step-by-step guide to our emergency repair process',
+          videoUrl: 'https://youtube.com/watch?v=example1',
+          thumbnail: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1506744038136-46273834b3fb'
+            }
+          },
+          cta: {
+            label: 'Watch Now',
+            href: 'https://youtube.com/watch?v=example1'
+          }
+        },
+        {
+          title: 'Kitchen Faucet Installation',
+          description: 'Professional kitchen faucet installation tutorial',
+          videoUrl: 'https://youtube.com/watch?v=example2',
+          thumbnail: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1464983953574-0892a716854b'
+            }
+          },
+          cta: {
+            label: 'Watch Now',
+            href: 'https://youtube.com/watch?v=example2'
+          }
+        },
+        {
+          title: 'Leak Detection Technology',
+          description: 'How we use advanced technology to find hidden leaks',
+          videoUrl: 'https://youtube.com/watch?v=example3',
+          thumbnail: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1519125323398-675f0ddb6308'
+            }
+          },
+          cta: {
+            label: 'Watch Now',
+            href: 'https://youtube.com/watch?v=example3'
+          }
+        }
+      ]
+    },
+  
+    // Service Areas Section
+    serviceAreasSection: {
+      title: 'Service Areas',
+      subtitle: 'We proudly serve a wide range of neighborhoods and cities. Find your area below and get in touch for fast, reliable plumbing services.',
+      areas: [
+        {
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1506744038136-46273834b3fb'
+            }
+          },
+          city: 'Downtown',
+          region: 'Central City',
+          description: 'Rapid response and expert service in the heart of the city.',
+          cta: {
+            label: 'Get Service',
+            href: '#contact'
+          }
+        },
+        {
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1464983953574-0892a716854b'
+            }
+          },
+          city: 'Greenfield',
+          region: 'North Suburbs',
+          description: 'Eco-friendly plumbing solutions for homes and businesses.',
+          cta: {
+            label: 'Book Now',
+            href: '#contact'
+          }
+        },
+        {
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1519125323398-675f0ddb6308'
+            }
+          },
+          city: 'Lakeside',
+          region: 'East District',
+          description: 'Trusted by families for quality repairs and installations.',
+          cta: {
+            label: 'Contact Us',
+            href: '#contact'
+          }
+        },
+        {
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1520880867055-1e30d1cb001c'
+            }
+          },
+          city: 'Tech Park',
+          region: 'Business Zone',
+          description: 'Commercial plumbing for offices, startups, and enterprises.',
+          cta: {
+            label: 'Learn More',
+            href: '#contact'
+          }
+        },
+        {
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1515378791036-0648a3ef77b2'
+            }
+          },
+          city: 'Westview',
+          region: 'West End',
+          description: 'Fast, friendly service for apartments and condos.',
+          cta: {
+            label: 'Get a Quote',
+            href: '#contact'
+          }
+        },
+        {
+          image: {
+            _type: 'image',
+            asset: {
+              _type: 'reference',
+              _ref: 'image-1521737852567-6949f3f9f2b5'
+            }
+          },
+          city: 'Sunnydale',
+          region: 'Southside',
+          description: 'Affordable solutions for growing neighborhoods.',
+          cta: {
+            label: 'See Details',
+            href: '#contact'
+          }
+        }
+      ]
+    },
+  
+    // Contact & Location
+    contactInfo: {
+      phone: '(555) 123-4567',
+      email: 'contact@aquaflowplumbing.com',
+      address: '123 Main Street, San Diego, CA 92101',
+      location: {
+        latitude: 32.7157,
+        longitude: -117.1611,
+        locationName: 'San Diego, CA'
+      }
+    },
+  
+    // Footer Section
+    footerSection: {
+      companyDescription: 'Reliable plumbing solutions for homes and businesses. Serving your area with certified experts and 24/7 support.',
+      socialLinks: [
+        {
+          platform: 'Facebook',
+          url: 'https://facebook.com/aquaflowplumbing',
+          icon: 'facebook'
+        },
+        {
+          platform: 'LinkedIn',
+          url: 'https://linkedin.com/company/aquaflowplumbing',
+          icon: 'linkedin'
+        },
+        {
+          platform: 'Instagram',
+          url: 'https://instagram.com/aquaflowplumbing',
+          icon: 'instagram'
+        },
+        {
+          platform: 'YouTube',
+          url: 'https://youtube.com/@aquaflowplumbing',
+          icon: 'youtube'
+        }
+      ],
+      footerLinks: {
+        product: [
+          { text: 'Features', href: '#services' },
+          { text: 'Pricing', href: '#pricing' },
+          { text: 'Integrations', href: '#integrations' },
+          { text: 'API Documentation', href: '/api' },
+          { text: 'Security', href: '/security' },
+          { text: 'Enterprise', href: '/enterprise' }
+        ],
+        company: [
+          { text: 'About Us', href: '#about' },
+          { text: 'Careers', href: '/careers' },
+          { text: 'Blog', href: '/blog' },
+          { text: 'Press Kit', href: '/press' },
+          { text: 'Partners', href: '/partners' },
+          { text: 'Contact', href: '#contact' }
+        ],
+        support: [
+          { text: 'Help Center', href: '/help' },
+          { text: 'Contact Support', href: '#contact' },
+          { text: 'System Status', href: '/status' },
+          { text: 'Community', href: '/community' },
+          { text: 'Privacy Policy', href: '/privacy' },
+          { text: 'Terms of Service', href: '/terms' },
+          { text: 'Cookie Policy', href: '/cookies' }
+        ]
+      }
+    },
+  
+    // SEO & Meta
+    seo: {
+      pageTitle: 'AquaFlow Plumbing - Expert Plumbing Services in San Diego',
+      metaDescription: 'Professional plumbing services in San Diego. 24/7 emergency repairs, installations, and maintenance. Licensed and insured plumbers serving homes and businesses.',
+      ogImage: {
+        _type: 'image',
+        asset: {
+          _type: 'reference',
+          _ref: 'image-1517245386807-bb43f82c33c4'
+        }
+      },
+      favicon: {
+        _type: 'image',
+        asset: {
+          _type: 'reference',
+          _ref: 'image-favicon'
+        }
+      }
+    },
+  
+    // Build Status (for workflow)
+    buildStatus: 'pending',
+    deployedUrl: null,
+    deployedAt: null
+  };
+  
+  export default sampleDocument;

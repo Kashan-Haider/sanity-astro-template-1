@@ -1,0 +1,302 @@
+---
+export interface Props {
+  latitude?: number;
+  longitude?: number;
+  locationName?: string;
+}
+
+const { 
+  latitude = 32.7157,
+  longitude = -117.1611,
+  locationName = "San Diego, CA"
+} = Astro.props;
+---
+
+<section class="w-full bg-gradient-to-br from-light via-dark/20 to-light/80 backdrop-blur-lg p-10 md:p-20 xl:px-40">
+  <div class="w-full justify-between flex flex-col lg:flex-row items-start gap-12">
+    <div class="flex-2/3 flex flex-col space-y-12">
+      <!-- Emergency Services Section -->
+      <div class="space-y-4">
+        <h3 class="text-3xl font-bold text-dark">24/7 Emergency Services</h3>
+        <div class="space-y-4 text-dark leading-relaxed">
+          <p>
+            When plumbing disasters strike, every minute counts. Our emergency response team is on standby 24 hours a day, 7 days a week, including holidays and weekends. We understand that burst pipes, overflowing toilets, and gas leaks can't wait for regular business hours.
+          </p>
+          <p>
+            Our certified technicians arrive within 30 minutes of your call, fully equipped with state-of-the-art tools and replacement parts. We've handled over 5,000 emergency calls in the past year alone, with an average response time of just 22 minutes. Our emergency services include immediate leak detection, pipe repairs, drain clearing, water heater issues, and gas line emergencies.
+          </p>
+          <p>
+            We provide upfront pricing even for emergency calls, so you'll never face surprise charges. All emergency work comes with our same quality guarantee and 12-month warranty on all repairs.
+          </p>
+        </div>
+        <div class="pt-4">
+          <a href="#emergency" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary to-primary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            <span class="mr-2">🚨</span>
+            Emergency Hotline: (555) 123-4567
+            <span class="ml-2">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Residential Services Section -->
+      <div class="space-y-4">
+        <h3 class="text-3xl font-bold text-dark">Residential Plumbing Excellence</h3>
+        <div class="space-y-4 text-dark leading-relaxed">
+          <p>
+            Your home is your sanctuary, and we treat it with the care and respect it deserves. Our residential plumbing services cover everything from simple repairs to complete system overhauls. With over 15 years of experience serving homeowners, we've built our reputation on reliability, quality, and exceptional customer service.
+          </p>
+          <p>
+            Our comprehensive residential services include kitchen and bathroom plumbing, water heater installation and repair, pipe replacement, fixture upgrades, and whole-house repiping. We specialize in both modern and historic homes, ensuring that every project meets current building codes while preserving your home's character.
+          </p>
+          <p>
+            We offer flexible financing options and work with all major insurance providers. Our team is fully licensed, bonded, and insured, giving you complete peace of mind. We also provide detailed estimates and project timelines, so you always know what to expect.
+          </p>
+        </div>
+        <div class="pt-4">
+          <a href="#residential" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary to-secondary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            <span class="mr-2">🏠</span>
+            Get Your Free Home Assessment
+            <span class="ml-2">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Commercial Services Section -->
+      <div class="space-y-4">
+        <h3 class="text-3xl font-bold text-dark">Commercial Plumbing Solutions</h3>
+        <div class="space-y-4 text-dark leading-relaxed">
+          <p>
+            Business downtime costs money. That's why we provide comprehensive commercial plumbing services designed to keep your operations running smoothly. From small retail spaces to large industrial facilities, our team has the expertise to handle projects of any scale.
+          </p>
+          <p>
+            Our commercial services include restaurant plumbing, office building maintenance, industrial pipe systems, medical facility compliance, and multi-unit property management. We work around your schedule to minimize disruption to your business operations. Our preventive maintenance programs help identify potential issues before they become costly problems.
+          </p>
+          <p>
+            We're certified to work with all major commercial plumbing systems and maintain relationships with leading manufacturers for quick parts availability. Our commercial clients benefit from priority scheduling, dedicated account managers, and detailed service reports for compliance and insurance purposes.
+          </p>
+        </div>
+        <div class="pt-4">
+          <a href="#commercial" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary to-primary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            <span class="mr-2">🏢</span>
+            Schedule Business Consultation
+            <span class="ml-2">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Maintenance Plans Section -->
+      <div class="space-y-4">
+        <h3 class="text-3xl font-bold text-dark">Preventive Maintenance Programs</h3>
+        <div class="space-y-4 text-dark leading-relaxed">
+          <p>
+            The best way to avoid expensive plumbing emergencies is through regular preventive maintenance. Our comprehensive maintenance programs are designed to extend the life of your plumbing systems while saving you money in the long run. We offer three tiers of service to meet different needs and budgets.
+          </p>
+          <p>
+            Our Basic Plan includes quarterly inspections, drain cleaning, water pressure testing, and leak detection. The Premium Plan adds annual water heater maintenance, fixture inspections, and priority emergency response. Our Ultimate Plan includes bi-annual comprehensive system evaluations, water quality testing, and 24/7 priority support.
+          </p>
+          <p>
+            All maintenance plan members receive 15% off emergency services, free annual safety inspections, and detailed maintenance reports. Our certified technicians use advanced diagnostic equipment to identify potential issues before they become major problems, helping you avoid costly repairs and unexpected downtime.
+          </p>
+        </div>
+        <div class="pt-4">
+          <a href="#maintenance" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary to-secondary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            <span class="mr-2">🛡️</span>
+            Choose Your Protection Plan
+            <span class="ml-2">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Water Treatment & Filtration Section -->
+      <div class="space-y-4">
+        <h3 class="text-3xl font-bold text-dark">Water Treatment & Filtration Systems</h3>
+        <div class="space-y-4 text-dark leading-relaxed">
+          <p>
+            Clean, safe water is essential for your health and the longevity of your plumbing systems. Our water treatment and filtration services ensure that your family or business has access to the highest quality water possible. We specialize in both residential and commercial water treatment solutions.
+          </p>
+          <p>
+            Our comprehensive water treatment services include whole-house filtration systems, reverse osmosis systems, water softeners, UV sterilization, and pH balancing systems. We conduct thorough water quality testing to identify contaminants, hardness levels, and other issues that could affect your water quality or damage your plumbing infrastructure.
+          </p>
+          <p>
+            We work with leading manufacturers like Kinetico, Culligan, and Aquasana to provide the most reliable and efficient water treatment solutions. All our installations come with professional setup, comprehensive testing, and ongoing maintenance support. We also offer rental programs for businesses that prefer flexible payment options.
+          </p>
+        </div>
+        <div class="pt-4">
+          <a href="#water-treatment" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary to-primary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            <span class="mr-2">💧</span>
+            Test Your Water Quality Today
+            <span class="ml-2">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Smart Home Integration Section -->
+      <div class="space-y-4">
+        <h3 class="text-3xl font-bold text-dark">Smart Home Plumbing Integration</h3>
+        <div class="space-y-4 text-dark leading-relaxed">
+          <p>
+            Transform your home into a modern, efficient living space with our smart home plumbing integration services. We bring cutting-edge technology to your plumbing systems, providing convenience, energy savings, and peace of mind through intelligent monitoring and automation.
+          </p>
+          <p>
+            Our smart plumbing solutions include leak detection systems, smart water heaters, automated irrigation systems, and whole-house water monitoring. These systems can alert you to potential issues before they become major problems, help you track water usage, and even allow remote control of your plumbing systems through smartphone apps.
+          </p>
+          <p>
+            We integrate with popular smart home platforms like Google Home, Amazon Alexa, and Apple HomeKit, ensuring seamless compatibility with your existing smart home ecosystem. Our certified technicians are trained in the latest smart home technologies and provide comprehensive setup, programming, and ongoing support to ensure your smart plumbing systems work perfectly for years to come.
+          </p>
+        </div>
+        <div class="pt-4">
+          <a href="#smart-home" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary to-secondary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            <span class="mr-2">🏠</span>
+            Upgrade to Smart Plumbing
+            <span class="ml-2">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="lg:sticky lg:top-8 flex-1/3 w-full flex flex-col items-stretch space-y-8 h-fit">
+      <!-- Map Section -->
+      <div class="h-[40vh] w-full overflow-hidden shadow-2xl shadow-black bg-light/70 backdrop-blur-lg rounded-2xl">
+        <div 
+          id="map" 
+          class="w-full h-full rounded-2xl"
+          data-latitude={latitude}
+          data-longitude={longitude}
+          data-location-name={locationName}
+        ></div>
+      </div>
+
+      <!-- Contact Form Section -->
+      <div class="bg-light/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-dark/10">
+        <h3 class="text-2xl font-bold text-dark mb-6">Get In Touch</h3>
+        <form class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="firstName" class="block text-sm font-semibold text-dark mb-2">First Name</label>
+              <input type="text" id="firstName" name="firstName" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your first name" required>
+            </div>
+            <div>
+              <label for="lastName" class="block text-sm font-semibold text-dark mb-2">Last Name</label>
+              <input type="text" id="lastName" name="lastName" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your last name" required>
+            </div>
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-semibold text-dark mb-2">Email Address</label>
+            <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your email address" required>
+          </div>
+          <div>
+            <label for="phone" class="block text-sm font-semibold text-dark mb-2">Phone Number</label>
+            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your phone number" required>
+          </div>
+          <div>
+            <label for="service" class="block text-sm font-semibold text-dark mb-2">Service Needed</label>
+            <select id="service" name="service" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" required>
+              <option value="">Select a service</option>
+              <option value="emergency">Emergency Service</option>
+              <option value="residential">Residential Plumbing</option>
+              <option value="commercial">Commercial Plumbing</option>
+              <option value="maintenance">Maintenance Plan</option>
+              <option value="water-treatment">Water Treatment</option>
+              <option value="smart-home">Smart Home Integration</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-semibold text-dark mb-2">Message</label>
+            <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300 resize-none" placeholder="Tell us about your plumbing needs..."></textarea>
+          </div>
+          <button type="submit" class="w-full px-8 py-4 bg-gradient-to-r from-secondary to-primary text-light rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            Send Message
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact Details Section -->
+      <div class="bg-light/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-dark/10">
+        <h3 class="text-2xl font-bold text-dark mb-6">Contact Information</h3>
+        <div class="space-y-6">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
+              <span class="text-2xl">📞</span>
+            </div>
+            <div>
+              <h4 class="font-semibold text-dark text-lg">Phone</h4>
+              <p class="text-dark">Emergency: (555) 123-4567</p>
+              <p class="text-dark">Office: (555) 987-6543</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
+              <span class="text-2xl">📧</span>
+            </div>
+            <div>
+              <h4 class="font-semibold text-dark text-lg">Email</h4>
+              <p class="text-dark">info@plumbingservice.com</p>
+              <p class="text-dark">emergency@plumbingservice.com</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
+              <span class="text-2xl">📍</span>
+            </div>
+            <div>
+              <h4 class="font-semibold text-dark text-lg">Address</h4>
+              <p class="text-dark">123 Plumbing Street</p>
+              <p class="text-dark">San Diego, CA 92101</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
+              <span class="text-2xl">🕒</span>
+            </div>
+            <div>
+              <h4 class="font-semibold text-dark text-lg">Business Hours</h4>
+              <p class="text-dark">Monday - Friday: 7:00 AM - 7:00 PM</p>
+              <p class="text-dark">Saturday: 8:00 AM - 5:00 PM</p>
+              <p class="text-dark">Sunday: Emergency Service Only</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+  // Initialize the map when the DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    const mapElement = document.getElementById('map');
+    if (!mapElement) return;
+    
+    const mapLatitude = parseFloat(mapElement.dataset.latitude || '32.7157');
+    const mapLongitude = parseFloat(mapElement.dataset.longitude || '-117.1611');
+    const mapLocationName = mapElement.dataset.locationName || 'San Diego, CA';
+    
+    // Create the map
+    const map = L.map('map').setView([mapLatitude, mapLongitude], 13);
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // Add a marker for the location
+    const marker = L.marker([mapLatitude, mapLongitude]).addTo(map);
+    marker.bindPopup(`<b>${mapLocationName}</b><br>Our Location`).openPopup();
+    
+    // Add some styling to the map container
+    mapElement.style.borderRadius = '1rem';
+  });
+</script>
+
+<script>
+  // TypeScript declaration for Leaflet
+  declare global {
+    const L: any;
+  }
+</script> 

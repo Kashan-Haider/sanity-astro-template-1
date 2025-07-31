@@ -1,39 +1,50 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: oklch(0.38 0.08 260);           /* Deep blue (brand) */
-  --color-accent: #BF465A;                       /* Strong modern rose (accent) */
-  --color-surface: #010819;         /* Dark slate (surface/background) */
+  --color-primary: oklch(0.38 0.08 260);        /* Deep blue (primary) */
+  --color-secondary: #BF465A;                    /* Strong modern rose (secondary) */
+  --color-dark: #1a1a1a;                        /* Very dark gray */
+  --color-light: #f8f9fa;                       /* Very light gray */
 
-  /* Text on dark backgrounds */
-  --color-text-heading-dark: oklch(0.98 0.01 260);      /* Near-white for headings */
-  --color-text-subheading-dark: oklch(0.98 0.01 260);   /* Near-white for headings */
-  --color-text-body-dark: oklch(0.98 0.01 260);         /* Near-white for headings */
-
-  /* Text on light backgrounds */
-  --color-text-heading-light: oklch(0.38 0.08 260);     /* Deep gray for headings */
-  --color-text-subheading-light: oklch(0.36 0.01 260);  /* Medium gray for subheadings */
-  --color-text-body-light: oklch(0.52 0.01 260);        /* Soft gray for body text */
+  /* Text colors */
+  --color-text-dark: #1a1a1a;                   /* Dark text */
+  --color-text-light: #f8f9fa;                  /* Light text */
 
   --font-display: 'Inter', 'Segoe UI', 'Arial', sans-serif;
 }
 
+/* Text color utilities */
+.text-dark { color: var(--color-text-dark); }
+.text-light { color: var(--color-text-light); }
+
+/* Brand color utilities */
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-dark { color: var(--color-dark); }
+.text-light { color: var(--color-light); }
+
+.bg-primary { background-color: var(--color-primary); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-dark { background-color: var(--color-dark); }
+.bg-light { background-color: var(--color-light); }
+
+/* Legacy support - mapping old classes to new ones */
+.text-brand { color: var(--color-primary); }
+.text-accent { color: var(--color-secondary); }
+.text-surface { color: var(--color-dark); }
+
+.bg-brand { background-color: var(--color-primary); }
+.bg-accent { background-color: var(--color-secondary); }
+.bg-surface { background-color: var(--color-dark); }
+
 /* Text on dark backgrounds */
-.text-heading-dark { color: var(--color-text-heading-dark); }
-.text-subheading-dark { color: var(--color-text-subheading-dark); }
-.text-body-dark { color: var(--color-text-body-dark); }
+.text-heading-dark { color: var(--color-text-light); }
+.text-subheading-dark { color: var(--color-text-light); }
+.text-body-dark { color: var(--color-text-light); }
 
 /* Text on light backgrounds */
-.text-heading-light { color: var(--color-text-heading-light); }
-.text-subheading-light { color: var(--color-text-subheading-light); }
-.text-body-light { color: var(--color-text-body-light); }
-
-.text-brand { color: var(--color-brand); }
-.text-accent { color: var(--color-accent); }
-.text-surface { color: var(--color-surface); }
-
-.bg-brand { background-color: var(--color-brand); }
-.bg-accent { background-color: var(--color-accent); }
-.bg-surface { background-color: var(--color-surface); }
+.text-heading-light { color: var(--color-text-dark); }
+.text-subheading-light { color: var(--color-text-dark); }
+.text-body-light { color: var(--color-text-dark); }
 
   
