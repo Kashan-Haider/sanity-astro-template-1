@@ -178,12 +178,26 @@ export const seoSettings = defineType({
   ],
 });
 
-// Image (formerly Optimized Image)
-export const image = defineType({
-  name: 'image',
-  title: 'Image',
+// Optimized Image
+export const optimizedImage = defineType({
+  name: 'optimizedImage',
+  title: 'Optimized Image',
   type: 'document',
   fields: [
+    defineField({
+      name: 'templateId',
+      title: 'Template ID',
+      type: 'string',
+      description: 'Template identifier for isolation',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'documentId',
+      title: 'Document ID',
+      type: 'string',
+      description: 'Document identifier for isolation',
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: 'imageId',
       title: 'Image ID',
