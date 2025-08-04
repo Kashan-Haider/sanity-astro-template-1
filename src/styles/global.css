@@ -4,11 +4,7 @@
   --color-primary: oklch(0.38 0.08 260);        /* Deep blue (primary) */
   --color-secondary: #BF465A;                    /* Strong modern rose (secondary) */
   --color-dark: #1a1a1a;                        /* Very dark gray */
-  --color-light: #f8f9fa;                       /* Very light gray */
-
-  /* Text colors */
-  --color-text-dark: #1a1a1a;                   /* Dark text */
-  --color-text-light: #f8f9fa;                  /* Light text */
+  --color-light: #f8f9fa;                       /* Very light gray */                /* Light text */
 
   --font-display: 'Inter', 'Segoe UI', 'Arial', sans-serif;
 }
