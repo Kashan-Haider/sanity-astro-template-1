@@ -1,37 +1,42 @@
 ---
+import ImageOptimization from '../utils/ImageOptimization.astro';
+import { sanityClient } from 'sanity:client';
+
 export interface Props {
   companyName?: string;
   sections?: Array<{
     title: string;
     description: string;
-    image: string;
-    imageAlt?: string;
   }>;
+  templateId?: string;
+  documentId?: string;
 }
 
 const { 
-  companyName = "Your Company Name",
-  sections = [
-    {
-      title: "Our Mission",
-      description: "We are dedicated to providing exceptional service and innovative solutions to our clients. Our mission is to exceed expectations and build lasting relationships through quality work and reliable service.",
-      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-      imageAlt: "Team working together"
-    },
-    {
-      title: "Years of Experience",
-      description: "With over 15 years in the industry, we've built a reputation for excellence and reliability. Our experienced team brings expertise and dedication to every project we undertake.",
-      image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80",
-      imageAlt: "Professional at work"
-    },
-    {
-      title: "Quality Assurance",
-      description: "We maintain the highest standards of quality in everything we do. From initial consultation to project completion, we ensure every detail meets our rigorous quality standards.",
-      image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80",
-      imageAlt: "Quality inspection"
-    }
-  ]
+  companyName,
+  sections,
+  templateId = import.meta.env.TEMPLATE_ID,
+  documentId = import.meta.env.DOCUMENT_ID
 } = Astro.props;
+
+// Fetch company overview images using image slots
+const companyImages = await sanityClient.fetch(`
+  *[_type == "optimizedImage" && 
+    templateId == $templateId && 
+    documentId == $documentId && 
+    (imageId == "company-image-01" || imageId == "company-image-02" || imageId == "company-image-03")] {
+    imageId,
+    "url": image.asset->url,
+    altText
+  }
+`, { templateId, documentId });
+
+// Map images to sections by index
+const mappedImages = {
+  'company-image-01': companyImages?.find((img: any) => img.imageId === 'company-image-01'),
+  'company-image-02': companyImages?.find((img: any) => img.imageId === 'company-image-02'),
+  'company-image-03': companyImages?.find((img: any) => img.imageId === 'company-image-03'),
+};
 ---
 
 <section id="company-overview" class="py-20 px-4 bg-gradient-to-br from-light/80 via-dark/10 to-light">
@@ -44,12 +49,16 @@ const {
       </h2>
       <p class="text-lg text-dark max-w-3xl mx-auto">
         Learn more about our company, our values, and what makes us the right choice for your needs.
-      </p>
+      </p> 
     </div>
 
     <!-- Alternating Sections -->
     <div class="space-y-24">
-      {sections.map((section, index) => (
+      {sections?.map((section, index) => {
+        const imageSlot = `company-image-0${index + 1}`;
+        const sectionImage = mappedImages[imageSlot as keyof typeof mappedImages];
+        
+        return (
         <div class={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12`}>
           <!-- Content Side -->
           <div class="flex-1 space-y-6">
@@ -67,16 +76,26 @@ const {
           <div class="flex-1">
             <div class="relative group">
               <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-3xl transform rotate-3 group-hover:rotate-6 transition-transform duration-300"></div>
-              <img 
-                src={section.image} 
-                alt={section.imageAlt || section.title} 
+                {sectionImage?.url ? (
+              <ImageOptimization 
+                    src={sectionImage.url} 
+                    alt={sectionImage.altText || `Company overview section ${index + 1}`} 
                 class="relative w-full h-80 object-cover rounded-3xl shadow-2xl transform -rotate-3 group-hover:-rotate-6 transition-transform duration-300"
                 loading="lazy"
               />
+                ) : (
+                  <div class="relative w-full h-80 bg-gray-200 rounded-3xl shadow-2xl transform -rotate-3 group-hover:-rotate-6 transition-transform duration-300 flex items-center justify-center">
+                    <div class="text-center text-gray-500">
+                      <p class="text-sm font-medium">Sanity Content Failed to Load</p>
+                      <p class="text-xs mt-1">Image slot: {imageSlot}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
 
     <!-- Call to Action -->

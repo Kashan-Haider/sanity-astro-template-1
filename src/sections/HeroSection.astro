@@ -1,27 +1,79 @@
 ---
 import ImageOptimization from '../utils/ImageOptimization.astro';
-import plumberImage from '../../public/plumber.jpg';
+import { sanityClient } from 'sanity:client';
 
 export interface Props {
-  heroTitle: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  ctaButtons?: Array<{
+    label: string;
+    href: string;
+  }>;
+  templateId?: string;
+  documentId?: string;
 }
-const { heroTitle } = Astro.props;
+
+const { 
+  title ,
+  subtitle ,
+  description,
+  ctaButtons,
+  templateId = import.meta.env.TEMPLATE_ID,
+  documentId = import.meta.env.DOCUMENT_ID
+} = Astro.props;
+
+// Fetch hero background image using the image slot
+const heroBackgroundImage = await sanityClient.fetch(`
+  *[_type == "optimizedImage" && 
+    templateId == $templateId && 
+    documentId == $documentId && 
+    imageId == "hero-background-01"][0] {
+    "url": image.asset->url,
+    altText
+  }
+`, { templateId, documentId });
 ---
+
 <section class="relative flex flex-col items-center justify-center min-h-[100vh] bg-dark overflow-hidden">
-  <ImageOptimization src={plumberImage} alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none select-none" loading="lazy" />
+  
+    <ImageOptimization 
+      src={heroBackgroundImage?.url} 
+      alt={heroBackgroundImage?.altText || "Hero background"} 
+      aria-hidden="true" 
+      class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none select-none" 
+      loading="lazy" 
+    />
+  
   <div class="absolute inset-0 bg-gradient-to-br from-primary/90 via-secondary/10 to-secondary/90"></div>
+  
   <div class="relative z-10 w-full flex flex-col items-center justify-center px-4 pt-32 pb-12">
     <div class="max-w-7xl w-full mx-auto text-center mb-10">
-      <span class="inline-block mb-4 px-5 py-2 rounded-full bg-white/10 border border-white/20 text-base font-semibold text-white tracking-wide shadow-lg backdrop-blur">24/7 Emergency Plumbing</span>
+      <span class="inline-block mb-4 px-5 py-2 rounded-full bg-white/10 border border-white/20 text-base font-semibold text-white tracking-wide shadow-lg backdrop-blur">
+        {subtitle}
+      </span>
+      
       <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 text-light">
-        {heroTitle}
+        {title}
       </h1>
+      
       <p class="text-lg md:text-xl text-light mb-8 font-medium">
-        Fast, reliable, and affordable plumbing solutions for homes and businesses. From emergency repairs to new installations, our certified plumbers are ready to help—anytime, anywhere.
+        {description}
       </p>
+      
       <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-        <a href="#" class="inline-block rounded-full px-8 py-3 text-base font-bold shadow transition bg-secondary hover:bg-primary text-light focus:outline-none focus:ring-2 focus:ring-white">Start Free Quote</a>
-        <a href="#" class="inline-block rounded-full px-8 py-3 text-base font-semibold border border-white/40 text-light hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">Contact Us</a>
+        {ctaButtons?.map((button, index) => (
+          <a 
+            href={button.href} 
+            class={`inline-block rounded-full px-8 py-3 text-base font-bold shadow transition focus:outline-none focus:ring-2 focus:ring-white ${
+              index === 0 
+                ? 'bg-secondary hover:bg-primary text-light' 
+                : 'border border-white/40 text-light hover:bg-white/10'
+            }`}
+          >
+            {button.label}
+          </a>
+        ))}
       </div>
     </div>
   </div>

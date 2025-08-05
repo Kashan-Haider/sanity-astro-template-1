@@ -1,68 +1,133 @@
 ---
 import ServiceBox from '../ui/ServiceBox.astro';
+import { sanityClient } from 'sanity:client';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  ctaButton?: {
+    label: string;
+    href: string;
+  };
+  templateId?: string;
+  documentId?: string;
+}
+
+const { 
+  title = "Our Plumbing Services",
+  description = "From emergency repairs to new installations, our certified plumbers deliver fast, reliable, and affordable solutions for homes and businesses. Explore our most popular services below.",
+  ctaButton = { label: "Get Free Quote Today", href: "#" },
+  templateId = import.meta.env.TEMPLATE_ID,
+  documentId = import.meta.env.DOCUMENT_ID
+} = Astro.props;
+
+// Fetch services data from Sanity
+const servicesData = await sanityClient.fetch(`
+  *[_type == "sanity-astro-template" && 
+    templateId == $templateId && 
+    documentId == $documentId][0] {
+    sections[] {
+      _type,
+      title,
+      description,
+      services[]->{
+        _id,
+        title,
+        description,
+        features,
+        category,
+        ctaButton
+      }
+    }
+  }
+`, { templateId, documentId });
+
+// Extract services section
+const servicesSection = servicesData?.sections?.find((section: any) => section._type === 'servicesSection');
+
+// Fetch service images from image pool
+const serviceImages = await sanityClient.fetch(`
+  *[_type == "optimizedImage" && 
+    templateId == $templateId && 
+    documentId == $documentId && 
+    (imageId == "service-image-01" || imageId == "service-image-02" || imageId == "service-image-03" || imageId == "service-image-04" || imageId == "service-image-05" || imageId == "service-image-06")] {
+    imageId,
+    "url": image.asset->url,
+    altText
+  }
+`, { templateId, documentId });
+
+// Map images to services by index
+const mappedServiceImages = {
+  'service-image-01': serviceImages?.find((img: any) => img.imageId === 'service-image-01'),
+  'service-image-02': serviceImages?.find((img: any) => img.imageId === 'service-image-02'),
+  'service-image-03': serviceImages?.find((img: any) => img.imageId === 'service-image-03'),
+  'service-image-04': serviceImages?.find((img: any) => img.imageId === 'service-image-04'),
+  'service-image-05': serviceImages?.find((img: any) => img.imageId === 'service-image-05'),
+  'service-image-06': serviceImages?.find((img: any) => img.imageId === 'service-image-06'),
+};
+
+// Combine services data with images
+const services = servicesSection?.services?.map((service: any, index: number) => {
+  const imageSlot = `service-image-0${index + 1}`;
+  const serviceImage = mappedServiceImages[imageSlot as keyof typeof mappedServiceImages];
+  
+  return {
+    ...service,
+    image: serviceImage ? {
+      url: serviceImage.url,
+      altText: serviceImage.altText || service.title
+    } : null,
+    imageSlot
+  };
+}) || [];
+
+// Filter active services (all services are considered active by default)
+const activeServices = services;
 ---
+
 <section id="services" class="p-5 sm:p-10 md:py-24 md:px-20 lg:px-40 bg-gradient-to-br from-light/80 via-dark/10 to-light">
   <div class="mx-auto px-4">
     <div class="text-center mb-14">
-      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-dark">Our Plumbing Services</h2>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-dark">
+        {servicesSection?.title || title}
+      </h2>
       <p class="text-lg text-dark max-w-2xl mx-auto">
-        From emergency repairs to new installations, our certified plumbers deliver fast, reliable, and affordable solutions for homes and businesses. Explore our most popular services below.
+        {servicesSection?.description || description}
       </p>
     </div>
+    
+    {activeServices.length > 0 ? (
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {activeServices.map((service: any) => (
       <ServiceBox
-        image="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
-        alt="Plumber fixing a pipe"
-        title="Emergency Repairs"
-        bullets={["24/7 rapid response", "Leak & burst pipe fixes", "Clog removal", "No hidden fees"]}
-        cta={{ href: '#', label: 'Learn More' }}
+            image={service.image?.url}
+            alt={service.image?.altText || service.title}
+            title={service.title}
+            bullets={service.features || []}
+            cta={service.ctaButton || { href: "#", label: "Learn More" }}
       />
-      <ServiceBox
-        image="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80"
-        alt="Modern bathroom installation"
-        title="Installations"
-        bullets={["Pipes & fixtures", "Water heaters", "Bathroom & kitchen upgrades", "Eco-friendly options"]}
-        cta={{ href: '#', label: 'Learn More' }}
-      />
-      <ServiceBox
-        image="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"
-        alt="Plumber with maintenance tools"
-        title="Maintenance Plans"
-        bullets={["Scheduled checkups", "Preventative care", "Priority support", "Discounted repairs"]}
-        cta={{ href: '#', label: 'Learn More' }}
-      />
-      <ServiceBox
-        image="https://images.unsplash.com/photo-1520880867055-1e30d1cb001c?auto=format&fit=crop&w=600&q=80"
-        alt="Leak detection equipment"
-        title="Leak Detection"
-        bullets={["Advanced technology", "Non-invasive methods", "Early problem detection", "Detailed reports"]}
-        cta={{ href: '#', label: 'Learn More' }}
-      />
-      <ServiceBox
-        image="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=600&q=80"
-        alt="Pipe replacement"
-        title="Pipe Replacement"
-        bullets={["Old pipe upgrades", "Minimal disruption", "Quality materials", "Long-term reliability"]}
-        cta={{ href: '#', label: 'Learn More' }}
-      />
-      <ServiceBox
-        image="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&w=600&q=80"
-        alt="Residential and commercial plumbing"
-        title="Residential & Commercial"
-        bullets={["Homes & apartments", "Offices & businesses", "Custom solutions", "Licensed & insured"]}
-        cta={{ href: '#', label: 'Learn More' }}
-      />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <div class="bg-gray-100 rounded-lg p-8">
+          <p class="text-gray-500 text-lg font-medium">Sanity Content Failed to Load</p>
+          <p class="text-gray-400 text-sm mt-2">Services data could not be retrieved</p>
+        </div>
     </div>
+    )}
     
     <!-- Bottom CTA Button -->
+    {(servicesSection?.ctaButton || ctaButton) && (
     <div class="mt-12 text-center">
       <a 
-        href="#" 
+          href={(servicesSection?.ctaButton || ctaButton)?.href} 
         class="inline-block px-8 py-4 bg-secondary hover:bg-primary text-light font-bold rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-105"
       >
-        Get Free Quote Today
+          {(servicesSection?.ctaButton || ctaButton)?.label}
       </a>
     </div>
+    )}
   </div>
-
 </section>

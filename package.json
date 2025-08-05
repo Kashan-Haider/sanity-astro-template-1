@@ -7,7 +7,11 @@
     "build": "node scripts/optimize-images.js && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "optimize-images": "node scripts/optimize-images.js"
+    "optimize-images": "node scripts/optimize-images.js",
+    "sanity:dev": "node run-sanity-studio.js",
+    "sanity:start": "cd sanity-studio && npx sanity start --port 3333",
+    "sanity:build": "cd sanity-studio && npx sanity build",
+    "sanity:deploy": "cd sanity-studio && npx sanity deploy"
   },
   "dependencies": {
     "@astrojs/react": "^4.3.0",

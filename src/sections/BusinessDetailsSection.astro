@@ -1,173 +1,123 @@
 ---
+import { sanityClient } from 'sanity:client';
+
 export interface Props {
-  latitude?: number;
-  longitude?: number;
-  locationName?: string;
+  title?: string;
+  sections?: Array<{
+    title: string;
+    description: string;
+    ctaButton?: {
+      label: string;
+      href: string;
+    };
+  }>;
+  contactForm?: {
+    title: string;
+  };
+  map?: {
+    latitude: number;
+    longitude: number;
+    locationName: string;
+  };
+  templateId?: string;
+  documentId?: string;
 }
 
 const { 
-  latitude = 32.7157,
-  longitude = -117.1611,
-  locationName = "San Diego, CA"
+  title,
+  sections,
+  contactForm,
+  map,
+  templateId = import.meta.env.TEMPLATE_ID,
+  documentId = import.meta.env.DOCUMENT_ID
 } = Astro.props;
+
+// Fetch business details images from image pool
+const businessDetailsImages = await sanityClient.fetch(`
+  *[_type == "optimizedImage" && 
+    templateId == $templateId && 
+    documentId == $documentId && 
+    (imageId == "business-details-01" || imageId == "business-details-02" || imageId == "business-details-03" || imageId == "business-details-04" || imageId == "business-details-05" || imageId == "business-details-06")] {
+    imageId,
+    "url": image.asset->url,
+    altText
+  }
+`, { templateId, documentId });
+
+// Map images to sections by index
+const mappedBusinessDetailsImages = {
+  'business-details-01': businessDetailsImages?.find((img: any) => img.imageId === 'business-details-01'),
+  'business-details-02': businessDetailsImages?.find((img: any) => img.imageId === 'business-details-02'),
+  'business-details-03': businessDetailsImages?.find((img: any) => img.imageId === 'business-details-03'),
+  'business-details-04': businessDetailsImages?.find((img: any) => img.imageId === 'business-details-04'),
+  'business-details-05': businessDetailsImages?.find((img: any) => img.imageId === 'business-details-05'),
+  'business-details-06': businessDetailsImages?.find((img: any) => img.imageId === 'business-details-06'),
+};
+
+// Combine sections data with images
+const sectionsWithImages = sections?.map((section: any, index: number) => {
+  const imageSlot = `business-details-0${index + 1}`;
+  const sectionImage = mappedBusinessDetailsImages[imageSlot as keyof typeof mappedBusinessDetailsImages];
+  
+  return {
+    ...section,
+    image: sectionImage ? {
+      url: sectionImage.url,
+      altText: sectionImage.altText || section.title
+    } : null,
+    imageSlot
+  };
+}) || [];
 ---
 
 <section class="w-full bg-gradient-to-br from-light via-dark/20 to-light/80 backdrop-blur-lg p-10 md:p-20 xl:px-40">
   <div class="w-full justify-between flex flex-col lg:flex-row items-start gap-12">
     <div class="flex-2/3 flex flex-col space-y-12">
-      <!-- Emergency Services Section -->
+      {sectionsWithImages.length > 0 ? (
+        sectionsWithImages.map((section: any, index: number) => (
       <div class="space-y-4">
-        <h3 class="text-3xl font-bold text-dark">24/7 Emergency Services</h3>
+            <h3 class="text-3xl font-bold text-dark">{section.title}</h3>
         <div class="space-y-4 text-dark leading-relaxed">
-          <p>
-            When plumbing disasters strike, every minute counts. Our emergency response team is on standby 24 hours a day, 7 days a week, including holidays and weekends. We understand that burst pipes, overflowing toilets, and gas leaks can't wait for regular business hours.
-          </p>
-          <p>
-            Our certified technicians arrive within 30 minutes of your call, fully equipped with state-of-the-art tools and replacement parts. We've handled over 5,000 emergency calls in the past year alone, with an average response time of just 22 minutes. Our emergency services include immediate leak detection, pipe repairs, drain clearing, water heater issues, and gas line emergencies.
-          </p>
-          <p>
-            We provide upfront pricing even for emergency calls, so you'll never face surprise charges. All emergency work comes with our same quality guarantee and 12-month warranty on all repairs.
-          </p>
+              <p>{section.description}</p>
         </div>
+            {section.ctaButton && (
         <div class="pt-4">
-          <a href="#emergency" class="inline-flex items-center px-8 py-4 bg-primary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                <a href={section.ctaButton.href} class="inline-flex items-center px-8 py-4 bg-primary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
             <span class="mr-2">🚨</span>
-            Emergency Hotline: (555) 123-4567
+                  {section.ctaButton.label}
             <span class="ml-2">→</span>
           </a>
         </div>
+            )}
       </div>
-
-      <!-- Residential Services Section -->
-      <div class="space-y-4">
-        <h3 class="text-3xl font-bold text-dark">Residential Plumbing Excellence</h3>
-        <div class="space-y-4 text-dark leading-relaxed">
-          <p>
-            Your home is your sanctuary, and we treat it with the care and respect it deserves. Our residential plumbing services cover everything from simple repairs to complete system overhauls. With over 15 years of experience serving homeowners, we've built our reputation on reliability, quality, and exceptional customer service.
-          </p>
-          <p>
-            Our comprehensive residential services include kitchen and bathroom plumbing, water heater installation and repair, pipe replacement, fixture upgrades, and whole-house repiping. We specialize in both modern and historic homes, ensuring that every project meets current building codes while preserving your home's character.
-          </p>
-          <p>
-            We offer flexible financing options and work with all major insurance providers. Our team is fully licensed, bonded, and insured, giving you complete peace of mind. We also provide detailed estimates and project timelines, so you always know what to expect.
-          </p>
+        ))
+      ) : (
+        <div class="text-center py-12">
+          <div class="bg-gray-100 rounded-lg p-8">
+            <p class="text-gray-500 text-lg font-medium">Sanity Content Failed to Load</p>
+            <p class="text-gray-400 text-sm mt-2">Business details sections could not be retrieved</p>
         </div>
-        <div class="pt-4">
-          <a href="#residential" class="inline-flex items-center px-8 py-4 bg-secondary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <span class="mr-2">🏠</span>
-            Get Your Free Home Assessment
-            <span class="ml-2">→</span>
-          </a>
         </div>
-      </div>
-
-      <!-- Commercial Services Section -->
-      <div class="space-y-4">
-        <h3 class="text-3xl font-bold text-dark">Commercial Plumbing Solutions</h3>
-        <div class="space-y-4 text-dark leading-relaxed">
-          <p>
-            Business downtime costs money. That's why we provide comprehensive commercial plumbing services designed to keep your operations running smoothly. From small retail spaces to large industrial facilities, our team has the expertise to handle projects of any scale.
-          </p>
-          <p>
-            Our commercial services include restaurant plumbing, office building maintenance, industrial pipe systems, medical facility compliance, and multi-unit property management. We work around your schedule to minimize disruption to your business operations. Our preventive maintenance programs help identify potential issues before they become costly problems.
-          </p>
-          <p>
-            We're certified to work with all major commercial plumbing systems and maintain relationships with leading manufacturers for quick parts availability. Our commercial clients benefit from priority scheduling, dedicated account managers, and detailed service reports for compliance and insurance purposes.
-          </p>
-        </div>
-        <div class="pt-4">
-          <a href="#commercial" class="inline-flex items-center px-8 py-4 bg-primary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <span class="mr-2">🏢</span>
-            Schedule Business Consultation
-            <span class="ml-2">→</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Maintenance Plans Section -->
-      <div class="space-y-4">
-        <h3 class="text-3xl font-bold text-dark">Preventive Maintenance Programs</h3>
-        <div class="space-y-4 text-dark leading-relaxed">
-          <p>
-            The best way to avoid expensive plumbing emergencies is through regular preventive maintenance. Our comprehensive maintenance programs are designed to extend the life of your plumbing systems while saving you money in the long run. We offer three tiers of service to meet different needs and budgets.
-          </p>
-          <p>
-            Our Basic Plan includes quarterly inspections, drain cleaning, water pressure testing, and leak detection. The Premium Plan adds annual water heater maintenance, fixture inspections, and priority emergency response. Our Ultimate Plan includes bi-annual comprehensive system evaluations, water quality testing, and 24/7 priority support.
-          </p>
-          <p>
-            All maintenance plan members receive 15% off emergency services, free annual safety inspections, and detailed maintenance reports. Our certified technicians use advanced diagnostic equipment to identify potential issues before they become major problems, helping you avoid costly repairs and unexpected downtime.
-          </p>
-        </div>
-        <div class="pt-4">
-          <a href="#maintenance" class="inline-flex items-center px-8 py-4 bg-secondary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <span class="mr-2">🛡️</span>
-            Choose Your Protection Plan
-            <span class="ml-2">→</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Water Treatment & Filtration Section -->
-      <div class="space-y-4">
-        <h3 class="text-3xl font-bold text-dark">Water Treatment & Filtration Systems</h3>
-        <div class="space-y-4 text-dark leading-relaxed">
-          <p>
-            Clean, safe water is essential for your health and the longevity of your plumbing systems. Our water treatment and filtration services ensure that your family or business has access to the highest quality water possible. We specialize in both residential and commercial water treatment solutions.
-          </p>
-          <p>
-            Our comprehensive water treatment services include whole-house filtration systems, reverse osmosis systems, water softeners, UV sterilization, and pH balancing systems. We conduct thorough water quality testing to identify contaminants, hardness levels, and other issues that could affect your water quality or damage your plumbing infrastructure.
-          </p>
-          <p>
-            We work with leading manufacturers like Kinetico, Culligan, and Aquasana to provide the most reliable and efficient water treatment solutions. All our installations come with professional setup, comprehensive testing, and ongoing maintenance support. We also offer rental programs for businesses that prefer flexible payment options.
-          </p>
-        </div>
-        <div class="pt-4">
-          <a href="#water-treatment" class="inline-flex items-center px-8 py-4 bg-primary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <span class="mr-2">💧</span>
-            Test Your Water Quality Today
-            <span class="ml-2">→</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Smart Home Integration Section -->
-      <div class="space-y-4">
-        <h3 class="text-3xl font-bold text-dark">Smart Home Plumbing Integration</h3>
-        <div class="space-y-4 text-dark leading-relaxed">
-          <p>
-            Transform your home into a modern, efficient living space with our smart home plumbing integration services. We bring cutting-edge technology to your plumbing systems, providing convenience, energy savings, and peace of mind through intelligent monitoring and automation.
-          </p>
-          <p>
-            Our smart plumbing solutions include leak detection systems, smart water heaters, automated irrigation systems, and whole-house water monitoring. These systems can alert you to potential issues before they become major problems, help you track water usage, and even allow remote control of your plumbing systems through smartphone apps.
-          </p>
-          <p>
-            We integrate with popular smart home platforms like Google Home, Amazon Alexa, and Apple HomeKit, ensuring seamless compatibility with your existing smart home ecosystem. Our certified technicians are trained in the latest smart home technologies and provide comprehensive setup, programming, and ongoing support to ensure your smart plumbing systems work perfectly for years to come.
-          </p>
-        </div>
-        <div class="pt-4">
-          <a href="#smart-home" class="inline-flex items-center px-8 py-4 bg-secondary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <span class="mr-2">🏠</span>
-            Upgrade to Smart Plumbing
-            <span class="ml-2">→</span>
-          </a>
-        </div>
-      </div>
+      )}
     </div>
-    <div class="lg:sticky lg:top-8 flex-1/3 w-full flex flex-col items-stretch space-y-8 h-fit">
-      <!-- Map Section -->
-      <div class="h-[40vh] w-full overflow-hidden shadow-xl bg-light/70 backdrop-blur-lg rounded-2xl">
-        <div 
-          id="map" 
-          class="w-full h-full rounded-2xl"
-          data-latitude={latitude}
-          data-longitude={longitude}
-          data-location-name={locationName}
-        ></div>
-      </div>
+        <div class="lg:sticky lg:top-8 flex-1/3 w-full flex flex-col items-stretch space-y-8 h-fit">
+      {map && (
+        <!-- Map Section -->
+        <div class="h-[40vh] w-full overflow-hidden shadow-xl bg-light/70 backdrop-blur-lg rounded-2xl">
+          <div 
+            id="map" 
+            class="w-full h-full rounded-2xl"
+            data-latitude={map.latitude}
+            data-longitude={map.longitude}
+            data-location-name={map.locationName}
+          ></div>
+        </div>
+      )}
 
+      {contactForm && (
       <!-- Contact Form Section -->
       <div class="bg-light/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-dark/10">
-        <h3 class="text-2xl font-bold text-dark mb-6">Get In Touch</h3>
+          <h3 class="text-2xl font-bold text-dark mb-6">{contactForm.title}</h3>
         <form class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -187,19 +137,7 @@ const {
             <label for="phone" class="block text-sm font-semibold text-dark mb-2">Phone Number</label>
             <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your phone number" required>
           </div>
-          <div>
-            <label for="service" class="block text-sm font-semibold text-dark mb-2">Service Needed</label>
-            <select id="service" name="service" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" required>
-              <option value="">Select a service</option>
-              <option value="emergency">Emergency Service</option>
-              <option value="residential">Residential Plumbing</option>
-              <option value="commercial">Commercial Plumbing</option>
-              <option value="maintenance">Maintenance Plan</option>
-              <option value="water-treatment">Water Treatment</option>
-              <option value="smart-home">Smart Home Integration</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
+          
           <div>
             <label for="message" class="block text-sm font-semibold text-dark mb-2">Message</label>
             <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300 resize-none" placeholder="Tell us about your plumbing needs..."></textarea>
@@ -209,6 +147,7 @@ const {
           </button>
         </form>
       </div>
+      )}
 
       <!-- Contact Details Section -->
       <div class="bg-light/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-dark/10">
@@ -264,39 +203,154 @@ const {
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-<script>
-  // Initialize the map when the DOM is loaded
-  document.addEventListener('DOMContentLoaded', function() {
+<script is:inline>
+  // Simple, reliable map initialization
+  function initMap() {
     const mapElement = document.getElementById('map');
     if (!mapElement) return;
-    
-    const mapLatitude = parseFloat(mapElement.dataset.latitude || '32.7157');
-    const mapLongitude = parseFloat(mapElement.dataset.longitude || '-117.1611');
-    const mapLocationName = mapElement.dataset.locationName || 'San Diego, CA';
-    
-    // Create the map
-    const map = L.map('map').setView([mapLatitude, mapLongitude], 13);
-    
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-    
-    // Add a marker for the location
-    const marker = L.marker([mapLatitude, mapLongitude]).addTo(map);
-    marker.bindPopup(`<b>${mapLocationName}</b><br>Our Location`).openPopup();
-    
-    // Add some styling to the map container
-    mapElement.style.borderRadius = '1rem';
-  });
+
+    // Get coordinates from data attributes
+    const lat = parseFloat(mapElement.dataset.latitude) || 32.7157;
+    const lng = parseFloat(mapElement.dataset.longitude) || -117.1611;
+    const locationName = mapElement.dataset.locationName || 'Our Location';
+
+    console.log('Initializing map with coordinates:', lat, lng);
+
+    // Show loading state
+    mapElement.innerHTML = `
+      <div class="flex items-center justify-center h-full bg-gray-50">
+        <div class="text-center">
+          <div class="text-2xl mb-2">🗺️</div>
+          <div class="text-gray-600">Loading map...</div>
+        </div>
+      </div>
+    `;
+
+    // Wait for Leaflet to be available
+    function waitForLeaflet(attempts = 0) {
+      if (typeof L !== 'undefined') {
+        console.log('Leaflet loaded, creating map...');
+        createMap();
+      } else if (attempts < 50) { // Try for 5 seconds
+        setTimeout(() => waitForLeaflet(attempts + 1), 100);
+      } else {
+        console.error('Leaflet failed to load');
+        showFallback();
+      }
+    }
+
+    function createMap() {
+      try {
+        // Clear the loading content
+        mapElement.innerHTML = '';
+        
+        // Create the map
+        const map = L.map('map', {
+          center: [lat, lng],
+          zoom: 15,
+          zoomControl: false,
+          scrollWheelZoom: false,
+          dragging: true, // Allow dragging for better UX
+          touchZoom: true,
+          doubleClickZoom: false,
+          boxZoom: false,
+          keyboard: false
+        });
+
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors',
+          maxZoom: 18
+        }).addTo(map);
+
+        // Add marker
+        const marker = L.marker([lat, lng]).addTo(map);
+        marker.bindPopup(`<strong>${locationName}</strong>`).openPopup();
+
+        console.log('Map created successfully');
+
+        // Fix any sizing issues
+        setTimeout(() => {
+          map.invalidateSize();
+        }, 250);
+
+      } catch (error) {
+        console.error('Error creating map:', error);
+        showFallback();
+      }
+    }
+
+    function showFallback() {
+      mapElement.innerHTML = `
+        <div class="flex items-center justify-center h-full bg-gradient-to-br from-blue-50 to-blue-100">
+          <div class="text-center p-6">
+            <div class="text-4xl mb-3">📍</div>
+            <div class="text-gray-700 font-semibold text-lg mb-1">${locationName}</div>
+            <div class="text-gray-500 text-sm mb-3">Interactive map unavailable</div>
+            <a 
+              href="https://www.google.com/maps?q=${lat},${lng}" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors"
+            >
+              View on Google Maps
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    // Start the process
+    waitForLeaflet();
+  }
+
+  // Initialize when everything is ready
+  function initialize() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initMap);
+    } else {
+      // Add a small delay to ensure CSS is loaded
+      setTimeout(initMap, 100);
+    }
+  }
+
+  initialize();
 </script>
 
-<script>
-  // TypeScript declaration for Leaflet
-  declare global {
-    const L: any;
+<style>
+  /* Ensure map container has proper dimensions */
+  #map {
+    height: 100% !important;
+    width: 100% !important;
+    min-height: 300px;
+    position: relative;
+    z-index: 1;
   }
-</script> 
+  
+  .leaflet-container {
+    background: #f8fafc !important;
+    height: 100% !important;
+    width: 100% !important;
+  }
+  
+  .leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .leaflet-popup-content {
+    margin: 8px 12px;
+    font-family: inherit;
+  }
+
+  /* Fix for Tailwind CSS conflicts */
+  .leaflet-container img {
+    max-width: none !important;
+  }
+  
+  .leaflet-container a {
+    color: inherit;
+  }
+</style>
+
+ 

@@ -1,25 +1,78 @@
 ---
-import "../styles/global.css";
+export interface Props {
+  title?: string;
+  description?: string;
+  theme?: {
+    primaryColor?: string;
+    secondaryColor?: string;
+  };
+  seoData?: {
+    keywords?: string[];
+    ogTitle?: string;
+    ogDescription?: string;
+    ogUrl?: string;
+    ogImage?: {
+      url: string;
+      altText: string;
+    };
+    favicon?: {
+      url: string;
+      altText: string;
+    };
+  };
+}
+
+const { 
+  title = "AquaFlow Plumbing Services",
+  description = "Reliable plumbing services for homes and businesses",
+  theme,
+  seoData
+} = Astro.props;
+
+// Generate CSS variables for theme colors
+const themeStyles = theme ? `
+  :root {
+    --color-primary: ${theme.primaryColor || 'oklch(0.38 0.08 260)'};
+    --color-secondary: ${theme.secondaryColor || '#BF465A'};
+  }
+` : '';
 ---
-<!doctype html>
+
 <html lang="en">
 	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    {seoData?.keywords && (
+      <meta name="keywords" content={seoData.keywords.join(', ')} />
+    )}
+    
+    <!-- Open Graph / SEO -->
+    <meta property="og:title" content={seoData?.ogTitle || title} />
+    <meta property="og:description" content={seoData?.ogDescription || description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={seoData?.ogUrl || 'https://yourdomain.com'} />
+    {seoData?.ogImage?.url && (
+      <meta property="og:image" content={seoData.ogImage.url} />
+    )}
+    
+    {seoData?.favicon?.url ? (
+      <link rel="icon" href={seoData.favicon.url} />
+    ) : (
+      <link rel="icon" href="/favicon.svg" />
+    )}
+    
+    <!-- Dynamic Theme Colors -->
+    {themeStyles && (
+      <style set:html={themeStyles} />
+    )}
+    
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="/src/styles/global.css" />
 	</head>
 	<body>
 		<slot />
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

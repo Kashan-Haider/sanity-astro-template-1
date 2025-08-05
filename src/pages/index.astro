@@ -10,141 +10,325 @@ import BusinessDetailsSection from '../sections/BusinessDetailsSection.astro';
 import FooterSection from '../sections/FooterSection.astro';
 import CompanyOverviewSection from '../sections/CompanyOverviewSection.astro';
 import FAQSection from '../sections/FAQSection.astro';
-import '../styles/global.css';
 import { sanityClient } from 'sanity:client';
 import ServiceHighlights from '../sections/ServiceHighlights.astro';
 import PreFooterSection from '../sections/PreFooterSection.astro';
+import Layout from '../layouts/Layout.astro';
 
 const templateId = import.meta.env.TEMPLATE_ID;
 const documentId = import.meta.env.DOCUMENT_ID;
 
-const doc = await sanityClient.fetch(
-  `*[_type == "sanity-astro-template" && templateId == $templateId && documentId == $documentId][0]`,
-  { templateId, documentId }
-);
-const heroTitle = doc?.content?.heroTitle ?? 'n/a';
-
-const testimonials = [
-      {
-        image: 'https://randomuser.me/api/portraits/men/32.jpg',
-        name: 'James Thompson',
-        role: 'Founder',
-        company: 'GrowthLab',
-        link: '#',
-        industry: 'Digital Marketing',
-        text: 'From day one, this plumbing service exceeded our expectations. The team was prompt, professional, and solved our issues quickly. Highly recommended!',
-        verified: true
+// Fetch complete template data from Sanity
+const templateData = await sanityClient.fetch(`
+  *[_type == "sanity-astro-template" && templateId == $templateId && documentId == $documentId][0] {
+    businessName,
+    seoSettings->{
+      title,
+      description,
+      keywords,
+      ogTitle,
+      ogDescription,
+      ogImage->{
+        "url": image.asset->url,
+        altText
       },
-      {
-        name: 'Maria Anderson',
-        role: 'Homeowner',
-        company: '',
-        industry: 'Residential',
-        text: 'The technicians were friendly and explained everything thoroughly. I felt confident in their expertise and the results speak for themselves.',
-        verified: true
-      },
-      {
-        image: 'https://randomuser.me/api/portraits/women/44.jpg',
-        name: 'Felicia Garrett',
-        role: 'Office Manager',
-        company: 'Acme Corp',
-        link: '#',
-        industry: 'Commercial',
-        text: 'We had a major leak at our office and AquaFlow responded immediately. The repairs were done efficiently and with minimal disruption.',
-        verified: false
-      },
-      {
-        image: 'https://randomuser.me/api/portraits/men/32.jpg',
-        name: 'James Thompson',
-        role: 'Founder',
-        company: 'GrowthLab',
-        link: '#',
-        industry: 'Digital Marketing',
-        text: 'From day one, this plumbing service exceeded our expectations. The team was prompt, professional, and solved our issues quickly. Highly recommended!',
-        verified: true
-      },
-      {
-        name: 'Maria Anderson',
-        role: 'Homeowner',
-        company: '',
-        industry: 'Residential',
-        text: 'The technicians were friendly and explained everything thoroughly. I felt confident in their expertise and the results speak for themselves.',
-        verified: true
-      },
-      {
-        image: 'https://randomuser.me/api/portraits/women/44.jpg',
-        name: 'Felicia Garrett',
-        role: 'Office Manager',
-        company: 'Acme Corp',
-        link: '#',
-        industry: 'Commercial',
-        text: 'We had a major leak at our office and AquaFlow responded immediately. The repairs were done efficiently and with minimal disruption.',
-        verified: false
+      ogUrl,
+      favicon->{
+        "url": image.asset->url,
+        altText
       }
-    ]
+    },
+    businessContact->{
+      businessName,
+      logo->{
+        "url": image.asset->url,
+        altText
+      },
+      phone,
+      emergencyPhone,
+      email,
+      emergencyEmail,
+      address,
+      coordinates,
+      businessHours
+    },
+    sections[] {
+      _type,
+      title,
+      subtitle,
+      description,
+      isActive,
+      // Hero section specific fields
+      ctaButtons[] {
+        label,
+        href
+      },
+      // About section specific fields
+      image->{
+        "url": image.asset->url,
+        altText
+      },
+      features,
+      ctaButton {
+        label,
+        href
+      },
+      // Services section specific fields
+      services[]->{
+        title,
+        description,
+        image->{
+          "url": image.asset->url,
+          altText
+        },
+        features,
+        ctaButton {
+          label,
+          href
+        },
+        category,
+        isActive
+      },
+      // Gallery section specific fields
+      items[]->{
+        title,
+        description,
+        image->{
+          "url": image.asset->url,
+          altText
+        },
+        ctaButton {
+          label,
+          href
+        },
+        category,
+        isActive
+      },
+      // Testimonials section specific fields
+      testimonials[]->{
+        name,
+        role,
+        company,
+        industry,
+        text,
+        image->{
+          "url": image.asset->url,
+          altText
+        }
+      },
+      // FAQ section specific fields
+      faqs[]->{
+        question,
+        answer,
+        category,
+        isActive
+      },
+      // Service area section specific fields
+      serviceAreas[]->{
+        city,
+        region,
+        description,
+        ctaButton {
+          label,
+          href
+        }
+      },
+      // Business details section specific fields
+      sections[] {
+        title,
+        description,
+        ctaButton {
+          label,
+          href
+        }
+      },
+      contactForm {
+        title,
+        isActive
+      },
+      map {
+        isActive,
+        latitude,
+        longitude,
+        locationName
+      },
+      // Company overview section specific fields
+      sections[] {
+        title,
+        description,
+        image->{
+          "url": image.asset->url,
+          altText
+        }
+      },
+      // Service highlights section specific fields
+      statistics[]->{
+        value,
+        label,
+        icon,
+        image->{
+          "url": image.asset->url,
+          altText
+        },
+        isActive
+      },
+      // Pre-footer section specific fields
+      logo->{
+        "url": image.asset->url,
+        altText
+      },
+      socialLinks[]->{
+        platform,
+        url
+      },
+      // Footer section specific fields
+      serviceAreas[]->{
+        region,
+        services
+      },
+      copyright
+    },
+    serviceAreas[]->{
+      city,
+      region,
+      description,
+      ctaButton {
+        label,
+        href
+      }
+    },
+    socialLinks[]->{
+      platform,
+      url
+    },
+    theme
+  }
+`, { templateId, documentId });
+
+// Extract sections by type for easier access
+const heroSection = templateData?.sections?.find((section: any) => section._type === 'heroSection');
+const aboutSection = templateData?.sections?.find((section: any) => section._type === 'aboutSection');
+const servicesSection = templateData?.sections?.find((section: any) => section._type === 'servicesSection');
+const gallerySection = templateData?.sections?.find((section: any) => section._type === 'gallerySection');
+const testimonialsSection = templateData?.sections?.find((section: any) => section._type === 'testimonialsSection');
+const faqSection = templateData?.sections?.find((section: any) => section._type === 'faqSection');
+const serviceAreaSection = templateData?.sections?.find((section: any) => section._type === 'serviceAreaSection');
+const businessDetailsSection = templateData?.sections?.find((section: any) => section._type === 'businessDetailsSection');
+const companyOverviewSection = templateData?.sections?.find((section: any) => section._type === 'companyOverviewSection');
+const serviceHighlightsSection = templateData?.sections?.find((section: any) => section._type === 'serviceHighlightsSection');
+const preFooterSection = templateData?.sections?.find((section: any) => section._type === 'preFooterSection');
+const footerSection = templateData?.sections?.find((section: any) => section._type === 'footerSection');
+
+
+// SEO data
+const seoData = templateData?.seoSettings;
+const businessData = templateData?.businessContact;
+console.log(companyOverviewSection)
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AquaFlow Plumbing Services</title>
-    <meta name="description" content="Reliable plumbing services for homes and businesses. 24/7 certified experts for repairs, installations, and emergencies." />
-    <!-- Open Graph / SEO Placeholders -->
-    <meta property="og:title" content="AquaFlow Plumbing Services" />
-    <meta property="og:description" content="Reliable plumbing services for homes and businesses. 24/7 certified experts for repairs, installations, and emergencies." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://yourdomain.com" />
-    <meta property="og:image" content="/favicon.svg" />
-    <link rel="icon" href="/favicon.svg" />
-  </head>
-  <body>
-    <Navbar />
-    <HeroSection heroTitle={heroTitle} />
-    <ServiceHighlights />
-    <CompanyOverviewSection />
-    <AboutSection />
-    <ServicesSection />
-    <GalleryShowcase items={[
-      {
-        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
-        heading: 'Modern Bathroom Remodel',
-        description: 'A complete transformation with new fixtures, tiling, and water-saving technology.',
-        cta: { label: 'View Project', href: '#' }
-      },
-      {
-        image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80',
-        heading: 'Eco-Friendly Installations',
-        description: 'Sustainable plumbing solutions for a greener home.',
-        cta: { label: 'Learn More', href: '#' }
-      },
-      {
-        image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80',
-        heading: 'Emergency Leak Repair',
-        description: 'Rapid response and expert repair for urgent plumbing issues.',
-        cta: { label: 'See Details', href: '#' }
-      },
-      {
-        image: 'https://images.unsplash.com/photo-1520880867055-1e30d1cb001c?auto=format&fit=crop&w=800&q=80',
-        heading: 'Pipe Replacement Project',
-        description: 'Upgrading old pipes for improved safety and efficiency.',
-        cta: { label: 'Our Process', href: '#' }
-      },
-      {
-        image: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80',
-        heading: 'Commercial Plumbing Success',
-        description: 'Reliable solutions for offices, restaurants, and businesses.',
-        cta: { label: 'See Portfolio', href: '#' }
-      },
-    ]} />
-    <BusinessDetailsSection 
-    latitude={32.7157}
-    longitude={-117.1611}
-    locationName="San Diego, CA"
+
+<Layout 
+  title={seoData?.title || 'AquaFlow Plumbing Services'}
+  description={seoData?.description || 'Reliable plumbing services for homes and businesses. 24/7 certified experts for repairs, installations, and emergencies.'}
+  theme={templateData?.theme}
+  seoData={seoData}
+>
+  <Navbar />
+  
+      {heroSection && (
+      <HeroSection 
+        title={heroSection.title}
+        subtitle={heroSection.subtitle}
+        description={heroSection.description}
+        ctaButtons={heroSection.ctaButtons}
+      />
+    )}
+  
+  {serviceHighlightsSection && (
+    <ServiceHighlights 
+      title={serviceHighlightsSection.title}
+      statistics={serviceHighlightsSection.statistics}
+    />
+  )}
+
+  {companyOverviewSection && (
+    <CompanyOverviewSection 
+      companyName={templateData.businessName}
+      sections={companyOverviewSection.sections}
+    />
+  )}
+    {aboutSection && (
+      <AboutSection 
+        title={aboutSection.title}
+        description={aboutSection.description}
+        features={aboutSection.features}
+        ctaButton={aboutSection.ctaButton}
+      />
+    )}
+
+{servicesSection && (
+  <ServicesSection 
+    title={servicesSection.title}
+    description={servicesSection.description}
+    ctaButton={servicesSection.ctaButton}
   />
-  <TestimonialCarousel id="testimonials" testimonials={testimonials} />
-    <FAQSection />
-    <ServiceAreaSection />
-    <PreFooterSection/>
-    <FooterSection />
-  </body>
-</html>
+)}
+
+{gallerySection && (
+  <GalleryShowcase />
+)}
+  {businessDetailsSection && (
+    <BusinessDetailsSection 
+      title={businessDetailsSection.title}
+      sections={businessDetailsSection.sections}
+      contactForm={businessDetailsSection.contactForm}
+      map={businessDetailsSection.map}
+    />
+  )}
+
+
+
+  <!-- 
+  
+  
+  
+  
+  {testimonialsSection && (
+    <TestimonialCarousel 
+      title={testimonialsSection.title}
+      description={testimonialsSection.description}
+      testimonials={testimonialsSection.testimonials}
+    />
+  )}
+  
+  {faqSection && (
+    <FAQSection 
+      title={faqSection.title}
+      description={faqSection.description}
+      faqs={faqSection.faqs}
+    />
+  )}
+  
+  {serviceAreaSection && (
+    <ServiceAreaSection 
+      title={serviceAreaSection.title}
+      description={serviceAreaSection.description}
+      serviceAreas={serviceAreaSection.serviceAreas}
+      ctaButton={serviceAreaSection.ctaButton}
+    />
+  )}
+  
+  {preFooterSection && (
+    <PreFooterSection 
+      logo={preFooterSection.logo}
+      description={preFooterSection.description}
+      socialLinks={preFooterSection.socialLinks}
+    />
+  )}
+  
+  {footerSection && (
+    <FooterSection 
+      serviceAreas={footerSection.serviceAreas}
+      copyright={footerSection.copyright}
+    />
+  )} -->
+</Layout>

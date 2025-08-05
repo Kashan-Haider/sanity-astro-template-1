@@ -1,49 +1,126 @@
 ---
+import { sanityClient } from 'sanity:client';
 
+export interface Props {
+  title?: string;
+  description?: string;
+  templateId?: string;
+  documentId?: string;
+}
 
-const { items = [] } = Astro.props;
+const { 
+  title = "Gallery Highlights",
+  description = "Explore our recent projects and see the difference our team makes. Each gallery item features a unique solution and a story of success.",
+  templateId = import.meta.env.TEMPLATE_ID,
+  documentId = import.meta.env.DOCUMENT_ID
+} = Astro.props;
+
+// Fetch gallery data from Sanity
+const galleryData = await sanityClient.fetch(`
+  *[_type == "sanity-astro-template" && 
+    templateId == $templateId && 
+    documentId == $documentId][0] {
+    sections[] {
+      _type,
+      title,
+      description
+    }
+  }
+`, { templateId, documentId });
+
+// Extract gallery section
+const gallerySection = galleryData?.sections?.find((section: any) => section._type === 'gallerySection');
+
+// Fetch gallery images from image pool
+const galleryImages = await sanityClient.fetch(`
+  *[_type == "optimizedImage" && 
+    templateId == $templateId && 
+    documentId == $documentId && 
+    (imageId == "gallery-image-01" || imageId == "gallery-image-02" || imageId == "gallery-image-03" || imageId == "gallery-image-04" || imageId == "gallery-image-05" || imageId == "gallery-image-06")] {
+    imageId,
+    "url": image.asset->url,
+    altText
+  }
+`, { templateId, documentId });
+
+// Map images to gallery items by index
+const mappedGalleryImages = {
+  'gallery-image-01': galleryImages?.find((img: any) => img.imageId === 'gallery-image-01'),
+  'gallery-image-02': galleryImages?.find((img: any) => img.imageId === 'gallery-image-02'),
+  'gallery-image-03': galleryImages?.find((img: any) => img.imageId === 'gallery-image-03'),
+  'gallery-image-04': galleryImages?.find((img: any) => img.imageId === 'gallery-image-04'),
+  'gallery-image-05': galleryImages?.find((img: any) => img.imageId === 'gallery-image-05'),
+  'gallery-image-06': galleryImages?.find((img: any) => img.imageId === 'gallery-image-06'),
+};
+
+// Create gallery items from image pool only
+const items = Object.entries(mappedGalleryImages)
+  .filter(([_, image]) => image) // Only include images that exist
+  .map(([imageSlot, image]) => ({
+    image: image.url,
+    heading: image.altText || `Gallery Image ${imageSlot.split('-').pop()}`,
+    imageSlot
+  }));
+
+// Filter active items (all items are considered active by default)
+const activeItems = items;
 ---
+
 <section
   id="gallery"
   class="w-full py-20 px-4 bg-gradient-to-br from-primary via-dark/80 to-secondary"
-  x-data={`{ selected: 0, items: ${JSON.stringify(items)} }`}
+  x-data={`{ selected: 0, items: ${JSON.stringify(activeItems)} }`}
   x-init="selected = 0"
 >
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <div class="max-w-7xl mx-auto">
-    <h2 class="text-4xl md:text-5xl font-extrabold text-center mb-4 text-light">Gallery Highlights</h2>
-    <p class="text-lg text-center mb-12 text-light/70 max-w-2xl mx-auto">Explore our recent projects and see the difference our team makes. Each gallery item features a unique solution and a story of success.</p>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Featured item -->
-      <template x-if="items[selected]">
-        <div class="md:row-span-2 md:col-span-2 relative group overflow-hidden rounded-3xl shadow-2xl min-h-[350px] transition-all duration-500">
-          <img 
-            :src="items[selected].image" 
-            :alt="items[selected].heading" 
-            class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-            loading="lazy" 
-          />
-        </div>
-      </template>
-      <!-- Thumbnails -->
-      <div class="flex flex-col gap-8">
-        <template x-for="(item, i) in items" :key="i">
-          <button type="button"
-            class="relative group overflow-hidden rounded-2xl shadow-xl min-h-[160px] outline-none focus:ring-2 focus:ring-secondary transition-all duration-300"
-            :class="{ 'ring-4 ring-secondary': selected === i }"
-            @click="selected = i"
-            :aria-label="item.heading"
-            :tabindex="selected === i ? -1 : 0">
+    <h2 class="text-4xl md:text-5xl font-extrabold text-center mb-4 text-light">
+      {gallerySection?.title || title}
+    </h2>
+    <p class="text-lg text-center mb-12 text-light/70 max-w-2xl mx-auto">
+      {gallerySection?.description || description}
+    </p>
+    
+    {activeItems.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Featured item -->
+        <template x-if="items[selected]">
+          <div class="md:row-span-2 md:col-span-2 relative group overflow-hidden rounded-3xl shadow-2xl min-h-[350px] transition-all duration-500">
             <img 
-              :src="item.image" 
-              :alt="item.heading" 
+              :src="items[selected].image" 
+              :alt="items[selected].heading" 
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
               loading="lazy" 
             />
-            <span x-show="selected === i" class="absolute inset-0 ring-4 ring-secondary rounded-2xl pointer-events-none transition-all duration-300"></span>
-          </button>
+          </div>
         </template>
+        <!-- Thumbnails -->
+        <div class="flex flex-col gap-8">
+          <template x-for="(item, i) in items" :key="i">
+            <button type="button"
+              class="relative group overflow-hidden rounded-2xl shadow-xl min-h-[160px] outline-none focus:ring-2 focus:ring-secondary transition-all duration-300"
+              :class="{ 'ring-4 ring-secondary': selected === i }"
+              @click="selected = i"
+              :aria-label="item.heading"
+              :tabindex="selected === i ? -1 : 0">
+              <img 
+                :src="item.image" 
+                :alt="item.heading" 
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                loading="lazy" 
+              />
+              <span x-show="selected === i" class="absolute inset-0 ring-4 ring-secondary rounded-2xl pointer-events-none transition-all duration-300"></span>
+            </button>
+          </template>
+        </div>
       </div>
-    </div>
+    ) : (
+      <div class="text-center py-12">
+        <div class="bg-white/10 rounded-lg p-8">
+          <p class="text-white text-lg font-medium">Sanity Content Failed to Load</p>
+          <p class="text-white/70 text-sm mt-2">Gallery data could not be retrieved</p>
+        </div>
+      </div>
+    )}
   </div>
 </section> 

@@ -121,6 +121,7 @@ export const seoSettings = defineType({
   name: 'seoSettings',
   title: 'SEO Settings',
   type: 'document',
+  description: 'SEO settings use image slots "og-image-01" for Open Graph image and "favicon-01" for favicon',
   fields: [
     defineField({
       name: 'title',
@@ -158,9 +159,9 @@ export const seoSettings = defineType({
     defineField({
       name: 'ogImage',
       title: 'Open Graph Image',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
-      description: 'Image for social media sharing',
+      type: 'string',
+      description: 'Uses image slot "og-image-01" for social media sharing',
+      readOnly: true,
     }),
     defineField({
       name: 'ogUrl',
@@ -171,9 +172,9 @@ export const seoSettings = defineType({
     defineField({
       name: 'favicon',
       title: 'Favicon',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
-      description: 'Favicon for the website',
+      type: 'string',
+      description: 'Uses image slot "favicon-01" for website favicon',
+      readOnly: true,
     }),
   ],
 });
@@ -183,6 +184,7 @@ export const optimizedImage = defineType({
   name: 'optimizedImage',
   title: 'Optimized Image',
   type: 'document',
+  description: 'Centralized image pool for template images using slot-based assignment',
   fields: [
     defineField({
       name: 'templateId',
@@ -226,37 +228,20 @@ export const optimizedImage = defineType({
         hotspot: true,
       },
       validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'slot',
-      title: 'Image Slot',
-      type: 'string',
-      description: 'Where this image is used (e.g., hero-background, about-image, service-1)',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'dimensions',
-      title: 'Recommended Dimensions',
-      type: 'object',
-      fields: [
-        defineField({
-          name: 'width',
-          title: 'Width',
-          type: 'number',
-        }),
-        defineField({
-          name: 'height',
-          title: 'Height',
-          type: 'number',
-        }),
-      ],
-    }),
+    })
   ],
   preview: {
     select: {
       title: 'title',
       subtitle: 'imageId',
       media: 'image',
+    },
+    prepare(selection) {
+      const { title, subtitle, media } = selection;
+      return {
+        title: title,
+        media: media,
+      };
     },
   },
 });
@@ -266,18 +251,13 @@ export const businessContact = defineType({
   name: 'businessContact',
   title: 'Business Contact',
   type: 'document',
+  description: 'Business contact uses image slot "business-logo-01" for logo',
   fields: [
     defineField({
       name: 'businessName',
       title: 'Business Name',
       type: 'string',
       validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'logo',
-      title: 'Business Logo',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
     }),
     defineField({
       name: 'phone',
@@ -465,25 +445,14 @@ export const heroSection = defineType({
       description: 'Main description text',
     }),
     defineField({
-      name: 'backgroundImage',
-      title: 'Background Image',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
-    }),
-    defineField({
       name: 'ctaButtons',
       title: 'Call to Action Buttons',
       type: 'array',
       of: [{ type: 'ctaButton' }],
       validation: (Rule) => Rule.max(3),
     }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
+  description: 'Hero section uses image slot "hero-background-01" for background image',
 });
 
 // About Section
@@ -505,12 +474,6 @@ export const aboutSection = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'image',
-      title: 'About Image',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
-    }),
-    defineField({
       name: 'features',
       title: 'Key Features',
       type: 'array',
@@ -522,13 +485,8 @@ export const aboutSection = defineType({
       title: 'Call to Action',
       type: 'ctaButton',
     }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
+  description: 'About section uses image slot "about-image-01" for main image',
 });
 
 // Service
@@ -536,6 +494,7 @@ export const service = defineType({
   name: 'service',
   title: 'Service',
   type: 'document',
+  description: 'Service documents can use image slots "service-image-01" through "service-image-06" for their images',
   fields: [
     defineField({
       name: 'title',
@@ -549,12 +508,6 @@ export const service = defineType({
       type: 'text',
     }),
     defineField({
-      name: 'image',
-      title: 'Service Image',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
-    }),
-    defineField({
       name: 'features',
       title: 'Service Features',
       type: 'array',
@@ -565,28 +518,7 @@ export const service = defineType({
       name: 'ctaButton',
       title: 'Call to Action',
       type: 'ctaButton',
-    }),
-    defineField({
-      name: 'category',
-      title: 'Service Category',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Emergency', value: 'emergency' },
-          { title: 'Installation', value: 'installation' },
-          { title: 'Maintenance', value: 'maintenance' },
-          { title: 'Repair', value: 'repair' },
-          { title: 'Inspection', value: 'inspection' },
-          { title: 'Upgrade', value: 'upgrade' },
-        ],
-      },
-    }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
+    })
   ],
   preview: {
     select: {
@@ -626,12 +558,6 @@ export const servicesSection = defineType({
       title: 'Section CTA',
       type: 'ctaButton',
     }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
 });
 
@@ -640,6 +566,7 @@ export const galleryItem = defineType({
   name: 'galleryItem',
   title: 'Gallery Item',
   type: 'document',
+  description: 'Gallery items can use image slots "gallery-image-01" through "gallery-image-06" for their images',
   fields: [
     defineField({
       name: 'title',
@@ -655,9 +582,9 @@ export const galleryItem = defineType({
     defineField({
       name: 'image',
       title: 'Gallery Image',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
-      validation: (Rule) => Rule.required(),
+      type: 'string',
+      description: 'Uses image slots "gallery-image-01" through "gallery-image-06"',
+      readOnly: true,
     }),
     defineField({
       name: 'ctaButton',
@@ -677,12 +604,6 @@ export const galleryItem = defineType({
           { title: 'Team', value: 'team' },
         ],
       },
-    }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
     }),
   ],
   preview: {
@@ -711,20 +632,8 @@ export const gallerySection = defineType({
       title: 'Section Description',
       type: 'text',
     }),
-    defineField({
-      name: 'items',
-      title: 'Gallery Items',
-      type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'galleryItem' }] }],
-      validation: (Rule) => Rule.min(1),
-    }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
+  description: 'Gallery section uses image slots "gallery-image-01" through "gallery-image-06" for gallery images',
 });
 
 // Testimonial
@@ -732,6 +641,7 @@ export const testimonial = defineType({
   name: 'testimonial',
   title: 'Testimonial',
   type: 'document',
+  description: 'Testimonials can use image slots "testimonial-avatar-01" through "testimonial-avatar-06" for customer photos',
   fields: [
     defineField({
       name: 'name',
@@ -763,15 +673,15 @@ export const testimonial = defineType({
     defineField({
       name: 'image',
       title: 'Customer Photo',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
+      type: 'string',
+      description: 'Uses image slots "testimonial-avatar-01" through "testimonial-avatar-06"',
+      readOnly: true,
     })
   ],
   preview: {
     select: {
       title: 'name',
       subtitle: 'company',
-      media: 'image',
     },
   },
 });
@@ -799,12 +709,6 @@ export const testimonialsSection = defineType({
       type: 'array',
       of: [{ type: 'reference', to: [{ type: 'testimonial' }] }],
       validation: (Rule) => Rule.min(1),
-    }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
     }),
   ],
 });
@@ -842,12 +746,6 @@ export const faqItem = defineType({
         ],
       },
     }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
   preview: {
     select: {
@@ -880,12 +778,6 @@ export const faqSection = defineType({
       type: 'array',
       of: [{ type: 'reference', to: [{ type: 'faqItem' }] }],
       validation: (Rule) => Rule.min(1),
-    }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
     }),
   ],
 });
@@ -1009,12 +901,6 @@ export const businessDetailsSection = defineType({
           title: 'Form Title',
           type: 'string',
         }),
-        defineField({
-          name: 'isActive',
-          title: 'Show Contact Form',
-          type: 'boolean',
-          initialValue: true,
-        }),
       ],
     }),
     defineField({
@@ -1022,12 +908,6 @@ export const businessDetailsSection = defineType({
       title: 'Map Settings',
       type: 'object',
       fields: [
-        defineField({
-          name: 'isActive',
-          title: 'Show Map',
-          type: 'boolean',
-          initialValue: true,
-        }),
         defineField({
           name: 'latitude',
           title: 'Latitude',
@@ -1045,12 +925,6 @@ export const businessDetailsSection = defineType({
         }),
       ],
     }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
 });
 
@@ -1062,14 +936,8 @@ export const companyOverviewSection = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Section Title',
+      title: 'Title',
       type: 'string',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'description',
-      title: 'Section Description',
-      type: 'text',
     }),
     defineField({
       name: 'sections',
@@ -1089,12 +957,6 @@ export const companyOverviewSection = defineType({
               title: 'Description',
               type: 'text',
             }),
-            defineField({
-              name: 'image',
-              title: 'Section Image',
-              type: 'reference',
-              to: [{ type: 'optimizedImage' }],
-            }),
           ],
         },
       ],
@@ -1104,13 +966,8 @@ export const companyOverviewSection = defineType({
       title: 'Call to Action',
       type: 'ctaButton',
     }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
+  description: 'Company overview sections use image slots "company-image-01", "company-image-02", "company-image-03"',
 });
 
 // Service Highlights Section
@@ -1132,12 +989,6 @@ export const serviceHighlightsSection = defineType({
       of: [{ type: 'reference', to: [{ type: 'statistic' }] }],
       validation: (Rule) => Rule.min(1).max(6),
     }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
 });
 
@@ -1158,25 +1009,7 @@ export const statistic = defineType({
       title: 'Label',
       type: 'string',
       validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'icon',
-      title: 'Icon',
-      type: 'string',
-      description: 'SVG icon or emoji',
-    }),
-    defineField({
-      name: 'image',
-      title: 'Icon Image',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
-    }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
+    }) 
   ],
   preview: {
     select: {
@@ -1193,12 +1026,6 @@ export const preFooterSection = defineType({
   type: 'object',
   fields: [
     defineField({
-      name: 'logo',
-      title: 'Logo',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
-    }),
-    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
@@ -1209,13 +1036,8 @@ export const preFooterSection = defineType({
       type: 'array',
       of: [{ type: 'reference', to: [{ type: 'socialLink' }] }],
     }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
+  description: 'Pre-footer section uses image slot "logo-01" for logo',
 });
 
 // Footer Service Area
@@ -1263,64 +1085,8 @@ export const footerSection = defineType({
       type: 'string',
       description: 'Copyright notice (year will be automatically added)',
     }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
   ],
-});
-
-// Video Item (for future use)
-export const videoItem = defineType({
-  name: 'videoItem',
-  title: 'Video Item',
-  type: 'document',
-  fields: [
-    defineField({
-      name: 'title',
-      title: 'Video Title',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'description',
-      title: 'Description',
-      type: 'text',
-    }),
-    defineField({
-      name: 'videoUrl',
-      title: 'Video URL',
-      type: 'url',
-      description: 'YouTube, Vimeo, or direct video URL',
-    }),
-    defineField({
-      name: 'thumbnail',
-      title: 'Thumbnail Image',
-      type: 'reference',
-      to: [{ type: 'optimizedImage' }],
-    }),
-    defineField({
-      name: 'duration',
-      title: 'Duration',
-      type: 'string',
-      description: 'Video duration (e.g., "2:30")',
-    }),
-    defineField({
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-    }),
-  ],
-  preview: {
-    select: {
-      title: 'title',
-      subtitle: 'duration',
-      media: 'thumbnail',
-    },
-  },
 });
 
 export default sanityAstroTemplate;
+

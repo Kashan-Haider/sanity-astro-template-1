@@ -1,29 +1,31 @@
 ---
 import StatsGlass from '../ui/StatsGlass.astro';
----
-<section class="bg-gradient-to-br from-light/80 via-dark/10 to-light py-10 md:py-20 px-4 md:px-10">
 
-    <h1 class="text-center text-3xl md:text-5xl font-bold mb-10">Service <span class="text-secondary">Highlights</span></h1>
-    <StatsGlass stats={[
-        { 
-          icon: '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
-          value: '500+', 
-          label: 'Projects Completed' 
-        },
-        { 
-          icon: '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
-          value: '99.9%', 
-          label: 'Uptime Guarantee' 
-        },
-        { 
-          icon: '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM8.5 16L12 13.5 15.5 16 12 18.5 8.5 16z"/><circle cx="12" cy="12" r="1.5"/></svg>',
-          value: '24/7', 
-          label: 'Expert Support' 
-        },
-        { 
-          icon: '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H16c-.8 0-1.54.37-2.01.99l-2.54 3.4c-.74.99-.74 2.31 0 3.3l1.54 2.05c.44.58 1.06.95 1.74 1.05L16 22h4zm-12.5 0c3.04 0 5.5-2.46 5.5-5.5S10.54 11 7.5 11 2 13.46 2 16.5 4.46 22 7.5 22z"/></svg>',
-          value: '150+', 
-          label: 'Happy Clients' 
-        },
-      ]} /> 
+export interface Props {
+  title?: string;
+  statistics?: Array<{
+    value: string;
+    label: string;
+    icon?: string;
+    image?: {
+      url: string;
+      altText: string;
+    };
+    isActive?: boolean;
+  }>;
+}
+
+const { title, statistics } = Astro.props;
+
+// Filter active statistics
+---
+
+<section class="bg-gradient-to-br from-light/80 via-dark/10 to-light py-10 md:py-20 px-4 md:px-10">
+  <h1 class="text-center text-3xl md:text-5xl font-bold mb-10">
+    {title?.split(' ').map((word, index) => 
+      index === 1 ? <span class="text-secondary">{` ${word}`}</span> : ` ${word}`
+    )}
+  </h1>
+  
+  <StatsGlass stats={statistics} /> 
 </section>
