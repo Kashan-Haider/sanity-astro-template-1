@@ -28,22 +28,12 @@ const templateData = await sanityClient.fetch(`
       keywords,
       ogTitle,
       ogDescription,
-      ogImage->{
-        "url": image.asset->url,
-        altText
-      },
+      ogImage,
       ogUrl,
-      favicon->{
-        "url": image.asset->url,
-        altText
-      }
+      favicon
     },
     businessContact->{
       businessName,
-      logo->{
-        "url": image.asset->url,
-        altText
-      },
       phone,
       emergencyPhone,
       email,
@@ -53,157 +43,133 @@ const templateData = await sanityClient.fetch(`
       businessHours
     },
     sections[] {
-      _type,
-      title,
-      subtitle,
-      description,
-      isActive,
-      // Hero section specific fields
-      ctaButtons[] {
-        label,
-        href
-      },
-      // About section specific fields
-      image->{
-        "url": image.asset->url,
-        altText
-      },
-      features,
-      ctaButton {
-        label,
-        href
-      },
-      // Services section specific fields
-      services[]->{
-        title,
-        description,
-        image->{
-          "url": image.asset->url,
-          altText
+      ...select(
+        _type == "heroSection" => {
+          _type,
+          title,
+          subtitle,
+          description,
+          ctaButtons
         },
-        features,
-        ctaButton {
-          label,
-          href
+        _type == "aboutSection" => {
+          _type,
+          title,
+          description,
+          features,
+          ctaButton
         },
-        category,
-        isActive
-      },
-      // Gallery section specific fields
-      items[]->{
-        title,
-        description,
-        image->{
-          "url": image.asset->url,
-          altText
+        _type == "servicesSection" => {
+          _type,
+          title,
+          description,
+          services[]-> {
+            title,
+            description,
+            features,
+            ctaButton
+          },
+          ctaButton
         },
-        ctaButton {
-          label,
-          href
+        _type == "gallerySection" => {
+          _type,
+          title,
+          description
         },
-        category,
-        isActive
-      },
-      // Testimonials section specific fields
-      testimonials[]->{
-        name,
-        role,
-        company,
-        industry,
-        text,
-        image->{
-          "url": image.asset->url,
-          altText
+        _type == "testimonialsSection" => {
+          _type,
+          title,
+          description,
+          testimonials[]-> {
+            name,
+            role,
+            company,
+            industry,
+            text,
+            image
+          }
+        },
+        _type == "faqSection" => {
+          _type,
+          title,
+          description,
+          faqs[]-> {
+            question,
+            answer,
+            category
+          }
+        },
+        _type == "serviceAreaSection" => {
+          _type,
+          title,
+          description,
+          serviceAreas[]-> {
+            city,
+            region,
+            description,
+            ctaButton
+          },
+          ctaButton
+        },
+        _type == "businessDetailsSection" => {
+          _type,
+          title,
+          sections[]{
+            title,
+            description,
+            ctaButton
+          },
+          contactForm,
+          map
+        },
+        _type == "companyOverviewSection" => {
+          _type,
+          title,
+          sections[]{
+            title,
+            description
+          },
+          ctaButton
+        },
+        _type == "serviceHighlightsSection" => {
+          _type,
+          title,
+          statistics[]-> {
+            value,
+            label
+          }
+        },
+        _type == "preFooterSection" => {
+          _type,
+          description,
+          socialLinks[]-> {
+            platform,
+            url
+          }
+        },
+        _type == "footerSection" => {
+          _type,
+          serviceAreas[]-> {
+            region,
+            services
+          },
+          copyright
         }
-      },
-      // FAQ section specific fields
-      faqs[]->{
-        question,
-        answer,
-        category,
-        isActive
-      },
-      // Service area section specific fields
-      serviceAreas[]->{
-        city,
-        region,
-        description,
-        ctaButton {
-          label,
-          href
-        }
-      },
-      // Business details section specific fields
-      sections[] {
-        title,
-        description,
-        ctaButton {
-          label,
-          href
-        }
-      },
-      contactForm {
-        title,
-        isActive
-      },
-      map {
-        isActive,
-        latitude,
-        longitude,
-        locationName
-      },
-      // Company overview section specific fields
-      sections[] {
-        title,
-        description,
-        image->{
-          "url": image.asset->url,
-          altText
-        }
-      },
-      // Service highlights section specific fields
-      statistics[]->{
-        value,
-        label,
-        icon,
-        image->{
-          "url": image.asset->url,
-          altText
-        },
-        isActive
-      },
-      // Pre-footer section specific fields
-      logo->{
-        "url": image.asset->url,
-        altText
-      },
-      socialLinks[]->{
-        platform,
-        url
-      },
-      // Footer section specific fields
-      serviceAreas[]->{
-        region,
-        services
-      },
-      copyright
+      )
     },
-    serviceAreas[]->{
+    serviceAreas[]-> {
       city,
       region,
       description,
-      ctaButton {
-        label,
-        href
-      }
+      ctaButton
     },
-    socialLinks[]->{
+    socialLinks[]-> {
       platform,
       url
     },
     theme
   }
 `, { templateId, documentId });
+
 
 // Extract sections by type for easier access
 const heroSection = templateData?.sections?.find((section: any) => section._type === 'heroSection');
@@ -223,7 +189,7 @@ const footerSection = templateData?.sections?.find((section: any) => section._ty
 // SEO data
 const seoData = templateData?.seoSettings;
 const businessData = templateData?.businessContact;
-console.log(companyOverviewSection)
+console.log(businessDetailsSection)
 ---
 
 <Layout 

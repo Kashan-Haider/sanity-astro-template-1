@@ -32,6 +32,11 @@ const {
   documentId = import.meta.env.DOCUMENT_ID
 } = Astro.props;
 
+// Check if we have any data to display
+const hasData = sections && sections.length > 0;
+const hasMap = map && map.latitude && map.longitude && map.locationName;
+const hasContactForm = contactForm && contactForm.title;
+
 // Fetch business details images from image pool
 const businessDetailsImages = await sanityClient.fetch(`
   *[_type == "optimizedImage" && 
@@ -71,148 +76,153 @@ const sectionsWithImages = sections?.map((section: any, index: number) => {
 ---
 
 <section class="w-full bg-gradient-to-br from-light via-dark/20 to-light/80 backdrop-blur-lg p-10 md:p-20 xl:px-40">
-  <div class="w-full justify-between flex flex-col lg:flex-row items-start gap-12">
-    <div class="flex-2/3 flex flex-col space-y-12">
-      {sectionsWithImages.length > 0 ? (
-        sectionsWithImages.map((section: any, index: number) => (
-      <div class="space-y-4">
-            <h3 class="text-3xl font-bold text-dark">{section.title}</h3>
-        <div class="space-y-4 text-dark leading-relaxed">
-              <p>{section.description}</p>
-        </div>
-            {section.ctaButton && (
-        <div class="pt-4">
-                <a href={section.ctaButton.href} class="inline-flex items-center px-8 py-4 bg-primary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <span class="mr-2">🚨</span>
-                  {section.ctaButton.label}
-            <span class="ml-2">→</span>
-          </a>
-        </div>
-            )}
+  {hasData || hasMap || hasContactForm ? (
+    <div class="w-full justify-between flex flex-col lg:flex-row items-start gap-12">
+      <div class="flex-2/3 flex flex-col space-y-12">
+        {hasData ? (
+          sectionsWithImages.map((section: any, index: number) => (
+            <div class="space-y-4">
+              <h3 class="text-3xl font-bold text-dark">{section.title}</h3>
+              <div class="space-y-4 text-dark leading-relaxed">
+                <p>{section.description}</p>
+              </div>
+              {section.ctaButton && (
+                <div class="pt-4">
+                  <a href={section.ctaButton.href} class="inline-flex items-center px-8 py-4 bg-primary text-light rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                    <span class="mr-2">🚨</span>
+                    {section.ctaButton.label}
+                    <span class="ml-2">→</span>
+                  </a>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <div class="text-center py-12">
+            <div class="bg-gray-100 rounded-lg p-8">
+              <p class="text-gray-500 text-lg font-medium">Sanity Content Failed to Load</p>
+              <p class="text-gray-400 text-sm mt-2">Business details sections could not be retrieved from Sanity</p>
+            </div>
+          </div>
+        )}
       </div>
-        ))
-      ) : (
-        <div class="text-center py-12">
-          <div class="bg-gray-100 rounded-lg p-8">
-            <p class="text-gray-500 text-lg font-medium">Sanity Content Failed to Load</p>
-            <p class="text-gray-400 text-sm mt-2">Business details sections could not be retrieved</p>
-        </div>
-        </div>
-      )}
-    </div>
-        <div class="lg:sticky lg:top-8 flex-1/3 w-full flex flex-col items-stretch space-y-8 h-fit">
-      {map && (
-        <!-- Map Section -->
-        <div class="h-[40vh] w-full overflow-hidden shadow-xl bg-light/70 backdrop-blur-lg rounded-2xl">
-          <div 
-            id="map" 
-            class="w-full h-full rounded-2xl"
-            data-latitude={map.latitude}
-            data-longitude={map.longitude}
-            data-location-name={map.locationName}
-          ></div>
-        </div>
-      )}
+      
+      <div class="lg:sticky lg:top-8 flex-1/3 w-full flex flex-col items-stretch space-y-8 h-fit">
+        {hasMap ? (
+          <div class="h-[40vh] w-full overflow-hidden shadow-xl bg-light/70 backdrop-blur-lg rounded-2xl">
+            <div 
+              id="map" 
+              class="w-full h-full rounded-2xl"
+              data-latitude={map.latitude}
+              data-longitude={map.longitude}
+              data-location-name={map.locationName}
+            ></div>
+          </div>
+        ) : (
+          <div class="h-[40vh] w-full overflow-hidden shadow-xl bg-light/70 backdrop-blur-lg rounded-2xl">
+            <div class="flex items-center justify-center h-full bg-gray-100">
+              <div class="text-center">
+                <div class="text-gray-500 text-lg font-medium">Sanity Content Failed to Load</div>
+                <div class="text-gray-400 text-sm mt-2">Map data could not be retrieved from Sanity</div>
+              </div>
+            </div>
+          </div>
+        )}
 
-      {contactForm && (
-      <!-- Contact Form Section -->
-      <div class="bg-light/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-dark/10">
-          <h3 class="text-2xl font-bold text-dark mb-6">{contactForm.title}</h3>
-        <form class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label for="firstName" class="block text-sm font-semibold text-dark mb-2">First Name</label>
-              <input type="text" id="firstName" name="firstName" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your first name" required>
+        {hasContactForm ? (
+          <div class="bg-light/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-dark/10">
+            <h3 class="text-2xl font-bold text-dark mb-6">{contactForm.title}</h3>
+            <form class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label for="firstName" class="block text-sm font-semibold text-dark mb-2">First Name</label>
+                  <input type="text" id="firstName" name="firstName" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your first name" required>
+                </div>
+                <div>
+                  <label for="lastName" class="block text-sm font-semibold text-dark mb-2">Last Name</label>
+                  <input type="text" id="lastName" name="lastName" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your last name" required>
+                </div>
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-semibold text-dark mb-2">Email Address</label>
+                <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your email address" required>
+              </div>
+              <div>
+                <label for="phone" class="block text-sm font-semibold text-dark mb-2">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your phone number" required>
+              </div>
+              
+              <div>
+                <label for="message" class="block text-sm font-semibold text-dark mb-2">Message</label>
+                <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300 resize-none" placeholder="Tell us about your plumbing needs..."></textarea>
+              </div>
+              <button type="submit" class="w-full px-8 py-4 bg-primary text-light rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                Send Message
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div class="bg-light/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-dark/10">
+            <h3 class="text-2xl font-bold text-dark mb-6">Contact Form</h3>
+            <div class="text-center py-8">
+              <div class="bg-gray-100 rounded-lg p-6">
+                <p class="text-gray-500 text-lg font-medium">Sanity Content Failed to Load</p>
+                <p class="text-gray-400 text-sm mt-2">Contact form could not be retrieved from Sanity</p>
+              </div>
             </div>
-            <div>
-              <label for="lastName" class="block text-sm font-semibold text-dark mb-2">Last Name</label>
-              <input type="text" id="lastName" name="lastName" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your last name" required>
-            </div>
           </div>
-          <div>
-            <label for="email" class="block text-sm font-semibold text-dark mb-2">Email Address</label>
-            <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your email address" required>
-          </div>
-          <div>
-            <label for="phone" class="block text-sm font-semibold text-dark mb-2">Phone Number</label>
-            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300" placeholder="Enter your phone number" required>
-          </div>
-          
-          <div>
-            <label for="message" class="block text-sm font-semibold text-dark mb-2">Message</label>
-            <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 rounded-lg border border-dark/20 bg-white/80 text-dark placeholder-dark/60 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-300 resize-none" placeholder="Tell us about your plumbing needs..."></textarea>
-          </div>
-          <button type="submit" class="w-full px-8 py-4 bg-primary text-light rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            Send Message
-          </button>
-        </form>
-      </div>
-      )}
+        )}
 
-      <!-- Contact Details Section -->
-      <div class="bg-light/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-dark/10">
-        <h3 class="text-2xl font-bold text-dark mb-6">Contact Information</h3>
-        <div class="space-y-6">
-          <div class="flex flex-col md:flex-row items-start space-x-4">
-            <div class="flex-shrink-0 w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
-              <span class="text-2xl">📞</span>
-            </div>
-            <div>
-              <h4 class="font-semibold text-dark text-lg">Phone</h4>
-              <p class="text-dark">Emergency: (555) 123-4567</p>
-              <p class="text-dark">Office: (555) 987-6543</p>
-            </div>
-          </div>
-          <div class="flex flex-col md:flex-row items-start space-x-4">
-            <div class="flex-shrink-0 w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
-              <span class="text-2xl">📧</span>
-            </div>
-            <div>
-              <h4 class="font-semibold text-dark text-lg">Email</h4>
-              <p class="text-dark">info@plumbingservice.com</p>
-              <p class="text-dark">emergency@plumbingservice.com</p>
-            </div>
-          </div>
-          <div class="flex flex-col md:flex-row items-start space-x-4">
-            <div class="flex-shrink-0 w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
-              <span class="text-2xl">📍</span>
-            </div>
-            <div>
-              <h4 class="font-semibold text-dark text-lg">Address</h4>
-              <p class="text-dark">123 Plumbing Street</p>
-              <p class="text-dark">San Diego, CA 92101</p>
-            </div>
-          </div>
-          <div class="flex flex-col md:flex-row items-start space-x-4">
-            <div class="flex-shrink-0 w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
-              <span class="text-2xl">🕒</span>
-            </div>
-            <div>
-              <h4 class="font-semibold text-dark text-lg">Business Hours</h4>
-              <p class="text-dark">Monday - Friday: 7:00 AM - 7:00 PM</p>
-              <p class="text-dark">Saturday: 8:00 AM - 5:00 PM</p>
-              <p class="text-dark">Sunday: Emergency Service Only</p>
+        <div class="bg-light/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-dark/10">
+          <h3 class="text-2xl font-bold text-dark mb-6">Contact Information</h3>
+          <div class="text-center py-8">
+            <div class="bg-gray-100 rounded-lg p-6">
+              <p class="text-gray-500 text-lg font-medium">Sanity Content Failed to Load</p>
+              <p class="text-gray-400 text-sm mt-2">Contact information could not be retrieved from Sanity</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  ) : (
+    <div class="text-center py-20">
+      <div class="bg-gray-100 rounded-lg p-12 max-w-2xl mx-auto">
+        <p class="text-gray-500 text-xl font-medium mb-4">Sanity Content Failed to Load</p>
+        <p class="text-gray-400 text-base">No business details data could be retrieved from Sanity. Please check your content configuration.</p>
+      </div>
+    </div>
+  )}
 </section>
 
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script is:inline>
   // Simple, reliable map initialization
   function initMap() {
     const mapElement = document.getElementById('map');
     if (!mapElement) return;
-
+    
     // Get coordinates from data attributes
-    const lat = parseFloat(mapElement.dataset.latitude) || 32.7157;
-    const lng = parseFloat(mapElement.dataset.longitude) || -117.1611;
-    const locationName = mapElement.dataset.locationName || 'Our Location';
+    const lat = parseFloat(mapElement.dataset.latitude);
+    const lng = parseFloat(mapElement.dataset.longitude);
+    const locationName = mapElement.dataset.locationName;
+
+    // Check if coordinates are valid
+    if (isNaN(lat) || isNaN(lng) || !locationName) {
+      mapElement.innerHTML = `
+        <div class="flex items-center justify-center h-full bg-gray-100">
+          <div class="text-center">
+            <div class="text-gray-500 text-lg font-medium">Sanity Content Failed to Load</div>
+            <div class="text-gray-400 text-sm mt-2">Map coordinates could not be retrieved from Sanity</div>
+          </div>
+        </div>
+      `;
+      return;
+    }
 
     console.log('Initializing map with coordinates:', lat, lng);
 
@@ -228,13 +238,14 @@ const sectionsWithImages = sections?.map((section: any, index: number) => {
 
     // Wait for Leaflet to be available
     function waitForLeaflet(attempts = 0) {
+      console.log('Checking for Leaflet, attempt:', attempts + 1);
       if (typeof L !== 'undefined') {
         console.log('Leaflet loaded, creating map...');
         createMap();
       } else if (attempts < 50) { // Try for 5 seconds
         setTimeout(() => waitForLeaflet(attempts + 1), 100);
       } else {
-        console.error('Leaflet failed to load');
+        console.error('Leaflet failed to load after 50 attempts');
         showFallback();
       }
     }
@@ -243,30 +254,39 @@ const sectionsWithImages = sections?.map((section: any, index: number) => {
       try {
         // Clear the loading content
         mapElement.innerHTML = '';
-        
+    
         // Create the map
         const map = L.map('map', {
           center: [lat, lng],
           zoom: 15,
           zoomControl: false,
           scrollWheelZoom: false,
-          dragging: true, // Allow dragging for better UX
+          dragging: true,
           touchZoom: true,
           doubleClickZoom: false,
           boxZoom: false,
           keyboard: false
         });
-
-        // Add tile layer
+    
+        // Add OpenStreetMap tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '© OpenStreetMap contributors',
-          maxZoom: 18
+          maxZoom: 18,
+          minZoom: 3,
+          subdomains: 'abc'
         }).addTo(map);
+    
+        // Add custom marker with better styling
+        const customIcon = L.divIcon({
+          className: 'custom-marker',
+          html: '<div style="background-color: #ef4444; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+          iconSize: [20, 20],
+          iconAnchor: [10, 10]
+        });
 
-        // Add marker
-        const marker = L.marker([lat, lng]).addTo(map);
-        marker.bindPopup(`<strong>${locationName}</strong>`).openPopup();
-
+        const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+        marker.bindPopup(`<strong>${locationName}</strong><br>Our Location`).openPopup();
+    
         console.log('Map created successfully');
 
         // Fix any sizing issues
@@ -281,23 +301,27 @@ const sectionsWithImages = sections?.map((section: any, index: number) => {
     }
 
     function showFallback() {
-      mapElement.innerHTML = `
-        <div class="flex items-center justify-center h-full bg-gradient-to-br from-blue-50 to-blue-100">
-          <div class="text-center p-6">
-            <div class="text-4xl mb-3">📍</div>
-            <div class="text-gray-700 font-semibold text-lg mb-1">${locationName}</div>
-            <div class="text-gray-500 text-sm mb-3">Interactive map unavailable</div>
-            <a 
-              href="https://www.google.com/maps?q=${lat},${lng}" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors"
-            >
-              View on Google Maps
-            </a>
+      console.log('Showing fallback - attempting to load Leaflet dynamically');
+      
+      // Try to load Leaflet dynamically as a last resort
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      script.onload = () => {
+        console.log('Leaflet loaded dynamically, retrying map creation');
+        setTimeout(createMap, 100);
+      };
+      script.onerror = () => {
+        console.error('Failed to load Leaflet dynamically');
+        mapElement.innerHTML = `
+          <div class="flex items-center justify-center h-full bg-gray-100">
+            <div class="text-center">
+              <div class="text-gray-500 text-lg font-medium">Sanity Content Failed to Load</div>
+              <div class="text-gray-400 text-sm mt-2">Map could not be initialized</div>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      };
+      document.head.appendChild(script);
     }
 
     // Start the process
@@ -343,6 +367,12 @@ const sectionsWithImages = sections?.map((section: any, index: number) => {
     font-family: inherit;
   }
 
+  /* Custom marker styling */
+  .custom-marker {
+    background: transparent;
+    border: none;
+  }
+  
   /* Fix for Tailwind CSS conflicts */
   .leaflet-container img {
     max-width: none !important;
@@ -350,6 +380,11 @@ const sectionsWithImages = sections?.map((section: any, index: number) => {
   
   .leaflet-container a {
     color: inherit;
+  }
+  
+  /* Ensure proper map rendering */
+  .leaflet-container {
+    font-family: inherit;
   }
 </style>
 
